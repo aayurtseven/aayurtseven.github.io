@@ -44,7 +44,7 @@
             <label>M3U Plus URL (Yöntem A)</label>
             <input type="text" id="m3uUrl" placeholder="https://domain.com?...">
         </div>
-        <button class="btn btn-blue" id="btnUrlSubmit">M3U Linki Gönder</button>
+        <button class="btn btn-blue" onclick="uploadPlaylistUrl()">M3U Linki Gönder</button>
         
         <div class="divider">Veya</div>
         
@@ -59,7 +59,7 @@
             </div>
             <textarea id="m3uContent" placeholder="#EXTM3U&#10;#EXTINF:-1,Kanal Adı&#10;http://..."></textarea>
         </div>
-        <button class="btn btn-orange" id="btnTextSubmit">M3U İçeriğini Gönder</button>
+        <button class="btn btn-orange" onclick="uploadPlaylistText()">M3U İçeriğini Gönder</button>
     </div>
     
     <!-- 2. BÖLÜM: PREMIUM AKTİVASYON -->
@@ -70,69 +70,86 @@
             <label>MAC Adresi</label>
             <input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
         </div>
-        <button class="btn btn-orange" id="btnPaySubmit">Ödeme Yap ve Aktif Et</button>
+        <button class="btn btn-orange" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
     </div>
 </div>
 
-<!-- CORS Kilitlenmesini Çözen Tam Güvenlikli Adres Tanımlamaları (www. eklenmiştir) -->
-<script type="module">
-    import { initializeApp } from "https://gstatic.com";
-    import { getDatabase, ref, update } from "https://gstatic.com";
+<!-- CORS Hatalarını Kökten Çözen Doğrudan HTTP API İstek Altyapısı -->
+<script>
+    const FIREBASE_DB_URL = "https://firebasedatabase.app";
 
-    const firebaseConfig = {
-        databaseURL: "https://firebasedatabase.app"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-
-    document.getElementById('btnUrlSubmit').addEventListener('click', () => {
-        const macAddress = document.getElementById('m3uMac').value.trim();
-        const m3uUrl = document.getElementById('m3uUrl').value.trim();
+    function uploadPlaylistUrl() {
+        var macAddress = document.getElementById('m3uMac').value.trim();
+        var m3uUrl = document.getElementById('m3uUrl').value.trim();
         
         if (macAddress.length < 5 || m3uUrl.length < 10) {
             alert('Lütfen geçerli bir MAC Adresi ve M3U URL girin.');
             return;
         }
 
-        update(ref(database, 'devices/' + macAddress), {
-            m3u_url: m3uUrl,
-            m3u_text: null
-        }).then(() => {
-            alert('M3U linkiniz başarıyla kaydedildi!');
-        }).catch((error) => {
+        // Dışarıdan kütüphane çekmeden doğrudan Firebase REST API üzerinden veriyi yazıyoruz
+        var targetUrl = `${FIREBASE_DB_URL}/devices/${macAddress}.json`;
+        
+        fetch(targetUrl, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                m3u_url: m3uUrl,
+                m3u_text: null
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('M3U linkiniz başarıyla kaydedildi!');
+            } else {
+                alert('Firebase veri yazma hatası oluştu.');
+            }
+        })
+        .catch(error => {
             alert('Bağlantı hatası: ' + error.message);
         });
-    });
+    }
 
-    document.getElementById('btnTextSubmit').addEventListener('click', () => {
-        const macAddress = document.getElementById('m3uMac').value.trim();
-        const m3uText = document.getElementById('m3uContent').value.trim();
+    function uploadPlaylistText() {
+        var macAddress = document.getElementById('m3uMac').value.trim();
+        var m3uText = document.getElementById('m3uContent').value.trim();
         
         if (macAddress.length < 5 || m3uText.length < 10) {
             alert('Lütfen geçerli bir MAC Adresi ve M3U içeriği girin.');
             return;
         }
 
-        update(ref(database, 'devices/' + macAddress), {
-            m3u_text: m3uText,
-            m3u_url: null
-        }).then(() => {
-            alert('M3U kanal listesi içeriğiniz başarıyla yüklendi!');
-            document.getElementById('m3uContent').value = "";
-        }).catch((error) => {
+        var targetUrl = `${FIREBASE_DB_URL}/devices/${macAddress}.json`;
+
+        fetch(targetUrl, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                m3u_text: m3uText,
+                m3u_url: null
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('M3U kanal listesi içeriğiniz başarıyla yüklendi!');
+                document.getElementById('m3uContent').value = "";
+            } else {
+                alert('Firebase veri yazma hatası oluştu.');
+            }
+        })
+        .catch(error => {
             alert('Bağlantı hatası: ' + error.message);
         });
-    });
+    }
 
-    document.getElementById('btnPaySubmit').addEventListener('click', () => {
-        const macAddress = document.getElementById('payMac').value.trim();
+    function redirectToPayment() {
+        var macAddress = document.getElementById('payMac').value.trim();
         if (macAddress.length < 5) {
             alert('Lütfen geçerli bir MAC Adresi girin.');
             return;
         }
         alert("Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin.");
-    });
+    }
 </script>
 
 </body>
