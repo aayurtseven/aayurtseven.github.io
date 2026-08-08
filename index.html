@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZZIptv - Uygulama Aktivasyon Merkezi</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background-color: #1e1e1e; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 400px; }
+        h2 { color: #f39c12; margin-bottom: 10px; }
+        p { color: #aaaaaa; font-size: 14px; margin-bottom: 25px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; color: #dddddd; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 1px solid #333; border-radius: 6px; background-color: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 16px; text-align: center; }
+        input:focus { border-color: #f39c12; outline: none; }
+        .btn { width: 100%; padding: 14px; background-color: #f39c12; border: none; border-radius: 6px; color: #121212; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .btn:hover { background-color: #e67e22; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ZZIptv Aktivasyon</h2>
+    <p>Uygulama ekranındaki 16 haneli Aktivasyon Kodunu (Cihaz ID) girerek sınırsız erişimi hemen aktif edin.</p>
+    
+    <div class="input-group">
+        <label for="deviceId">Aktivasyon Kodu (Cihaz ID)</label>
+        <input type="text" id="deviceId" placeholder="Örn: 8a7b6c5d4e3f2a1b" maxlength="16">
+    </div>
+    
+    <button class="btn" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
+</div>
+
+<script>
+    function redirectToPayment() {
+        var id = document.getElementById('deviceId').value.trim();
+        if (id.length < 10) {
+            alert('Lütfen cihazınızın ekranında görünen geçerli bir kod girin.');
+            return;
+        }
+        
+        // GUMROAD VEYA ÖDEME LİNKİNİZ BURAYA GELECEK
+        // Kullanıcının yazdığı cihaz kimliğini ödeme sayfasına otomatik parametre olarak gönderiyoruz
+        var paymentUrl = "https://gumroad.com[custom][device_id]=" + id;
+        window.location.href = paymentUrl;
+    }
+</script>
+
+</body>
+</html>
