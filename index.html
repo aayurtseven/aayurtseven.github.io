@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZZIptv - Yönetim ve Aktivasyon Merkezi</title>
+    <title id="siteTitle">ZZIptv - Yönetim ve Aktivasyon Merkezi</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .container { background-color: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 450px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; position: relative; }
+        .lang-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
+        .lang-btn { background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s; }
+        .lang-btn.active { background: #f39c12; color: #121212; border-color: #f39c12; }
+        .container { background-color: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 450px; margin-top: 40px; }
         h2 { color: #f39c12; margin-top: 0; margin-bottom: 5px; }
         .subtitle { color: #aaaaaa; font-size: 14px; margin-bottom: 25px; }
         .card { background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left; border-top: 4px solid #f39c12; }
@@ -25,37 +28,43 @@
         .divider { text-align: center; margin: 15px 0; font-size: 12px; color: #777; text-transform: uppercase; font-weight: bold; }
     </style>
     
-    <!-- Resmi Google Firebase SDK v8 Bağlantıları -->
+    <!-- Resmi Google Firebase SDK v8 Kütüphaneleri -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 </head>
 <body>
 
+<!-- Sağ Üst Dil Seçim Butonları -->
+<div class="lang-switcher">
+    <button class="lang-btn active" id="btnLangTR" onclick="setLanguage('tr')">TR</button>
+    <button class="lang-btn" id="btnLangEN" onclick="setLanguage('en')">EN</button>
+</div>
+
 <div class="container">
-    <h2>ZZIptv Kontrol Paneli</h2>
-    <div class="subtitle">MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.</div>
+    <h2 id="mainTitle">ZZIptv Kontrol Paneli</h2>
+    <div class="subtitle" id="mainSubtitle">MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.</div>
     
     <!-- 1. BÖLÜM: M3U KANAL YÜKLEME -->
     <div class="card">
-        <h3>1. Kanal Listesi (M3U) Yükle</h3>
+        <h3 id="section1Title">1. Kanal Listesi (M3U) Yükle</h3>
         <div class="input-group">
-            <label>MAC Adresi</label>
+            <label class="lblMac">MAC Adresi</label>
             <input type="text" id="m3uMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
         </div>
         
         <!-- YÖNTEM A: LINK ILE YÜKLEME -->
         <div class="input-group">
-            <label>M3U Plus URL (Yöntem A)</label>
+            <label id="lblM3uUrl">M3U Plus URL (Yöntem A)</label>
             <input type="text" id="m3uUrl" placeholder="https://domain.com?...">
         </div>
         <button class="btn btn-blue" onclick="uploadPlaylistUrl()">M3U Linki Gönder</button>
         
-        <div class="divider">Veya</div>
+        <div class="divider" id="txtOr">Veya</div>
         
         <!-- YÖNTEM B: METIN OLARAK YAPIŞTIRMA -->
         <div class="input-group">
-            <label>M3U Dosya İçeriğini Yapıştırın (Yöntem B)</label>
-            <div class="instructions">
+            <label id="lblM3uText">M3U Dosya İçeriğini Yapıştırın (Yöntem B)</label>
+            <div class="instructions" id="txtInstructions">
                 <strong>Nasıl Yapılır?</strong><br>
                 1. Cihazınızdaki .m3u dosyanıza sağ tıklayıp <strong>Not Defteri (Notepad)</strong> ile açın.<br>
                 2. İçindeki tüm yazıları tamamen kopyalayın.<br>
@@ -68,78 +77,88 @@
     
     <!-- 2. BÖLÜM: PREMIUM AKTİVASYON -->
     <div class="card">
-        <h3>2. Ömür Boyu Lisans Aktif Et</h3>
-        <p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;">7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.</p>
+        <h3 id="section2Title">2. Ömür Boyu Lisans Aktif Et</h3>
+        <p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;" id="txtPayDesc">7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.</p>
         <div class="input-group">
-            <label>MAC Adresi</label>
+            <label class="lblMac">MAC Adresi</label>
             <input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
         </div>
-        <div class="input-group" style="display:none;">
-            <input type="text" id="dbSecret" value="">
-        </div>
-        <button class="btn btn-orange" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
+        <button class="btn btn-orange" id="btnPay" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
     </div>
 </div>
 
 <script>
-    // İstediğiniz adres kuruşu kuruşuna buraya yazılmıştır
-    const FIREBASE_DB_URL = "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app";
-    
-    // Resmi Google SDK bağlantısını tam adresinizle başlatıyoruz
+    // Sizin verdiğiniz europe-west1 adresiniz kuruşu kuruşuna buradadır.
+    const TARGET_DATABASE_URL = "https://firebasedatabase.appconst FIREBASE_DB_URL = "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app";
+
     const firebaseConfig = {
-        databaseURL: FIREBASE_DB_URL + "/"
+        databaseURL: TARGET_DATABASE_URL
     };
+    
+    // Resmi Google SDK bağlantısını başlatıyoruz
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    function uploadPlaylistUrl() {
-        var macAddress = document.getElementById('m3uMac').value.trim();
-        var m3uUrl = document.getElementById('m3uUrl').value.trim();
+    // Dil Paketleri Sözlüğü
+    const langData = {
+        tr: {
+            title: "ZZIptv - Yönetim ve Aktivasyon Merkezi",
+            mainTitle: "ZZIptv Kontrol Paneli",
+            mainSubtitle: "MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.",
+            section1Title: "1. Kanal Listesi (M3U) Yükle",
+            lblMac: "MAC Adresi",
+            lblM3uUrl: "M3U Plus URL (Yöntem A)",
+            btnSendUrl: "M3U Linki Gönder",
+            txtOr: "Veya",
+            lblM3uText: "M3U Dosya İçeriğini Yapıştırın (Yöntem B)",
+            instructions: "<strong>Nasıl Yapılır?</strong><br>1. Cihazınızdaki .m3u dosyanıza sağ tıklayıp <strong>Not Defteri (Notepad)</strong> ile açın.<br>2. İçindeki tüm yazıları tamamen kopyalayın.<br>3. Aşağıdaki kutuya yapıştırıp \"Gönder\" butonuna basın.",
+            btnSendText: "M3U İçeriğini Gönder",
+            section2Title: "2. Ömür Boyu Lisans Aktif Et",
+            txtPayDesc: "7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.",
+            btnPay: "Ödeme Yap ve Aktif Et",
+            alertValid: "Lütfen geçerli bir MAC Adresi ve M3U verisi girin.",
+            alertSuccessUrl: "M3U linkiniz başarıyla kaydedildi!",
+            alertSuccessText: "M3U kanal listesi içeriğiniz başarıyla yüklendi!",
+            alertPayProgress: "Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin."
+        },
+        en: {
+            title: "ZZIptv - Management & Activation Center",
+            mainTitle: "ZZIptv Control Panel",
+            mainSubtitle: "Upload playlists or activate your device via your MAC address.",
+            section1Title: "1. Upload Channel List (M3U)",
+            lblMac: "MAC Address",
+            lblM3uUrl: "M3U Plus URL (Method A)",
+            btnSendUrl: "Send M3U Link",
+            txtOr: "Or",
+            lblM3uText: "Paste M3U File Content (Method B)",
+            instructions: "<strong>How to do?</strong><br>1. Right-click your .m3u file on your device and open it with <strong>Notepad</strong>.<br>2. Copy all the text inside completely.<br>3. Paste it into the box below and press the \"Send\" button.",
+            btnSendText: "Send M3U Content",
+            section2Title: "2. Activate Lifetime License",
+            txtPayDesc: "If your 7-day trial has expired or you want unlimited access, make your payment here.",
+            btnPay: "Pay and Activate Now",
+            alertValid: "Please enter a valid MAC Address and M3U data.",
+            alertSuccessUrl: "Your M3U link has been saved successfully!",
+            alertSuccessText: "Your M3U playlist content has been uploaded successfully!",
+            alertPayProgress: "Payment system is under iyzico approval. Please try again later."
+        }
+    };
+
+    let currentLang = 'tr';
+
+    function setLanguage(lang) {
+        currentLang = lang;
         
-        if (macAddress.length < 5 || m3uUrl.length < 10) {
-            alert('Lütfen geçerli bir MAC Adresi ve M3U URL girin.');
-            return;
-        }
-
-        database.ref('devices/' + macAddress).update({
-            m3u_url: m3uUrl,
-            m3u_text: null
-        }).then(() => {
-            alert('M3U linkiniz başarıyla kaydedildi!');
-        }).catch((error) => {
-            alert('Hata oluştu: ' + error.message);
-        });
-    }
-
-    function uploadPlaylistText() {
-        var macAddress = document.getElementById('m3uMac').value.trim();
-        var m3uText = document.getElementById('m3uContent').value.trim();
+        document.getElementById('btnLangTR').classList.toggle('active', lang === 'tr');
+        document.getElementById('btnLangEN').classList.toggle('active', lang === 'en');
         
-        if (macAddress.length < 5 || m3uText.length < 10) {
-            alert('Lütfen geçerli bir MAC Adresi ve M3U içeriği girin.');
-            return;
-        }
-
-        database.ref('devices/' + macAddress).update({
-            m3u_text: m3uText,
-            m3u_url: null
-        }).then(() => {
-            alert('M3U kanal listesi içeriğiniz başarıyla yüklendi!');
-            document.getElementById('m3uContent').value = "";
-        }).catch((error) => {
-            alert('Hata oluştu: ' + error.message);
-        });
-    }
-
-    function redirectToPayment() {
-        var macAddress = document.getElementById('payMac').value.trim();
-        if (macAddress.length < 5) {
-            alert('Lütfen geçerli bir MAC Adresi girin.');
-            return;
-        }
-        alert("Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin.");
-    }
-</script>
-
-</body>
-</html>
+        document.getElementById('siteTitle').innerText = langData[lang].title;
+        document.getElementById('mainTitle').innerText = langData[lang].mainTitle;
+        document.getElementById('mainSubtitle').innerText = langData[lang].mainSubtitle;
+        document.getElementById('section1Title').innerText = langData[lang].section1Title;
+        document.getElementById('lblM3uUrl').innerText = langData[lang].lblM3uUrl;
+        document.getElementById('btnSendUrl').innerText = langData[lang].btnSendUrl;
+        document.getElementById('txtOr').innerText = langData[lang].txtOr;
+        document.getElementById('lblM3uText').innerText = langData[lang].lblM3uText;
+        document.getElementById('txtInstructions').innerHTML = langData[lang].instructions;
+        document.getElementById('btnSendText').innerText = langData[lang].btnSendText;
+        document.getElementById('section2Title').innerText = langData[lang].section2Title;
