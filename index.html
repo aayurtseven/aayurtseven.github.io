@@ -74,8 +74,8 @@
     </div>
 </div>
 
+<!-- GSTATIC bağımlılığı olmayan, doğrudan HTTP REST API üzerinden çalışan güvenli script -->
 <script>
-    // Gerçek ve Hatasız REST API Sunucu Bağlantınız
     const FIREBASE_DB_URL = "https://firebasedatabase.app";
 
     function uploadPlaylistUrl() {
@@ -87,7 +87,8 @@
             return;
         }
 
-        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
+        // Klasör yapısı kesinleştirildi, sunucu kilitlerini açmak için .json uzantısı eklendi
+        var targetUrl = `${FIREBASE_DB_URL}/devices/${macAddress}.json`;
         
         fetch(targetUrl, {
             method: "PATCH",
@@ -101,7 +102,7 @@
             if (response.ok) {
                 alert('M3U linkiniz başarıyla kaydedildi!');
             } else {
-                alert('Firebase veri yazma hatası: ' + response.status);
+                alert('Firebase veri yazma hatası oluştu.');
             }
         })
         .catch(error => {
@@ -118,7 +119,7 @@
             return;
         }
 
-        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
+        var targetUrl = `${FIREBASE_DB_URL}/devices/${macAddress}.json`;
 
         fetch(targetUrl, {
             method: "PATCH",
@@ -133,7 +134,7 @@
                 alert('M3U kanal listesi içeriğiniz başarıyla yüklendi!');
                 document.getElementById('m3uContent').value = "";
             } else {
-                alert('Firebase veri yazma hatası: ' + response.status);
+                alert('Firebase veri yazma hatası oluştu.');
             }
         })
         .catch(error => {
