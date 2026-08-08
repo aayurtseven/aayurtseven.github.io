@@ -74,7 +74,7 @@
     </div>
 </div>
 
-<!-- CORS Hatalarını Kökten Çözen Doğrudan HTTP API İstek Altyapısı -->
+<!-- Kesin ve Doğrudan Veri Gönderim Sağlayan HTTP REST Bağlantısı -->
 <script>
     const FIREBASE_DB_URL = "https://firebasedatabase.app";
 
@@ -87,11 +87,12 @@
             return;
         }
 
-        // Dışarıdan kütüphane çekmeden doğrudan Firebase REST API üzerinden veriyi yazıyoruz
-        var targetUrl = `${FIREBASE_DB_URL}/devices/${macAddress}.json`;
+        // URL formatı kesinleştirildi (.json eklendi)
+        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
         
         fetch(targetUrl, {
             method: "PATCH",
+            mode: "cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 m3u_url: m3uUrl,
@@ -102,7 +103,7 @@
             if (response.ok) {
                 alert('M3U linkiniz başarıyla kaydedildi!');
             } else {
-                alert('Firebase veri yazma hatası oluştu.');
+                alert('Firebase veri yazma hatası oluştu: ' + response.statusText);
             }
         })
         .catch(error => {
@@ -119,10 +120,11 @@
             return;
         }
 
-        var targetUrl = `${FIREBASE_DB_URL}/devices/${macAddress}.json`;
+        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
 
         fetch(targetUrl, {
             method: "PATCH",
+            mode: "cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 m3u_text: m3uText,
@@ -134,7 +136,7 @@
                 alert('M3U kanal listesi içeriğiniz başarıyla yüklendi!');
                 document.getElementById('m3uContent').value = "";
             } else {
-                alert('Firebase veri yazma hatası oluştu.');
+                alert('Firebase veri yazma hatası oluştu: ' + response.statusText);
             }
         })
         .catch(error => {
