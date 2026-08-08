@@ -3,46 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZZIptv - Uygulama Aktivasyon Merkezi</title>
+    <title>ZZIptv - Yönetim ve Aktivasyon Merkezi</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background-color: #1e1e1e; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 400px; }
-        h2 { color: #f39c12; margin-bottom: 10px; }
-        p { color: #aaaaaa; font-size: 14px; margin-bottom: 25px; }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; color: #dddddd; font-size: 14px; }
-        input { width: 100%; padding: 12px; border: 1px solid #333; border-radius: 6px; background-color: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 16px; text-align: center; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background-color: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 450px; }
+        h2 { color: #f39c12; margin-top: 0; margin-bottom: 5px; }
+        .subtitle { color: #aaaaaa; font-size: 14px; margin-bottom: 25px; }
+        .card { background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left; border-top: 4px solid #f39c12; }
+        .card h3 { margin: 0 0 15px 0; font-size: 16px; color: #f39c12; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; color: #dddddd; font-size: 13px; }
+        input { width: 100%; padding: 10px; border: 1px solid #444; border-radius: 6px; background-color: #1a1a1a; color: #fff; box-sizing: border-box; font-size: 15px; text-align: center; }
         input:focus { border-color: #f39c12; outline: none; }
-        .btn { width: 100%; padding: 14px; background-color: #f39c12; border: none; border-radius: 6px; color: #121212; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-        .btn:hover { background-color: #e67e22; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 5px; }
+        .btn-orange { background-color: #f39c12; color: #121212; }
+        .btn-orange:hover { background-color: #e67e22; }
+        .btn-blue { background-color: #2980b9; color: #fff; }
+        .btn-blue:hover { background-color: #3498db; }
     </style>
+    <!-- Firebase Bağlantısı (Kanal Listesini Göndermek İçin) -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
 </head>
 <body>
 
 <div class="container">
-    <h2>ZZIptv Aktivasyon</h2>
-    <p>Uygulama ekranındaki 16 haneli Aktivasyon Kodunu (Cihaz ID) girerek sınırsız erişimi hemen aktif edin.</p>
+    <h2>ZZIptv Kontrol Paneli</h2>
+    <div class="subtitle">Cihazınızı aktif edin ve kanal listenizi yükleyin.</div>
     
-    <div class="input-group">
-        <label for="deviceId">Aktivasyon Kodu (Cihaz ID)</label>
-        <input type="text" id="deviceId" placeholder="Örn: 8a7b6c5d4e3f2a1b" maxlength="16">
+    <!-- 1. BÖLÜM: M3U KANAL YÜKLEME -->
+    <div class="card">
+        <h3>1. Kanal Listesi (M3U) Yükle</h3>
+        <div class="input-group">
+            <label>Cihaz Kodu (Android ID)</label>
+            <input type="text" id="m3uMac" placeholder="Uygulamadaki Cihaz Kodunu Girin">
+        </div>
+        <div class="input-group">
+            <label>M3U Plus URL (Kanal Listenizin Linki)</label>
+            <input type="text" id="m3uUrl" placeholder="https://domain.com?...">
+        </div>
+        <button class="btn btn-blue" onclick="uploadPlaylist()">Kanalları Gönder</button>
     </div>
     
-    <button class="btn" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
+    <!-- 2. BÖLÜM: PREMIUM AKTİVASYON -->
+    <div class="card">
+        <h3>2. Ömür Boyu Lisans Aktif Et</h3>
+        <p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;">7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.</p>
+        <div class="input-group">
+            <label>Cihaz Kodu (Android ID)</label>
+            <input type="text" id="payMac" placeholder="Uygulamadaki Cihaz Kodunu Girin">
+        </div>
+        <button class="btn btn-orange" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
+    </div>
 </div>
 
 <script>
-    function redirectToPayment() {
-        var id = document.getElementById('deviceId').value.trim();
-        if (id.length < 10) {
-            alert('Lütfen cihazınızın ekranında görünen geçerli bir kod girin.');
+    // FİRREBASE YAPILANDIRMASI 
+    // (Firebase panelinizdeki "Project Settings" alanındaki kendi bilgilerinizi buraya yazın)
+    const firebaseConfig = {
+        databaseURL: "https://PROJE_ID_BURAYA.europe-west3.firebasedatabase.app"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // M3U URL'sini Firebase'e Kaydetme Fonksiyonu
+    function uploadPlaylist() {
+        var deviceId = document.getElementById('m3uMac').value.trim();
+        var m3uUrl = document.getElementById('m3uUrl').value.trim();
+        
+        if (deviceId.length < 5 || m3uUrl.length < 10) {
+            alert('Lütfen geçerli bir Cihaz Kodu ve M3U URL girin.');
             return;
         }
         
-        // GUMROAD VEYA ÖDEME LİNKİNİZ BURAYA GELECEK
-        // Kullanıcının yazdığı cihaz kimliğini ödeme sayfasına otomatik parametre olarak gönderiyoruz
-        var paymentUrl = "https://gumroad.com[custom][device_id]=" + id;
-        window.location.href = paymentUrl;
+        // Firebase'de devices/CIHAZ_KODU altına m3u_url değerini yazıyoruz
+        database.ref('devices/' + deviceId).update({
+            m3u_url: m3uUrl
+        }).then(() => {
+            alert('Kanal listeniz başarıyla gönderildi! Uygulamayı kapatıp açabilirsiniz.');
+        }).catch((error) => {
+            alert('Hata oluştu: ' + error.message);
+        });
+    }
+
+    // Ödeme Sayfasına Yönlendirme Fonksiyonu
+    function redirectToPayment() {
+        var id = document.getElementById('payMac').value.trim();
+        if (id.length < 5) {
+            alert('Lütfen geçerli bir Cihaz Kodu girin.');
+            return;
+        }
+        // Pazartesi günü iyzico onaylanınca Payhip linkinizi buraya koyacaksınız
+        var payhipUrl = "https://payhip.com[custom][device_id]=" + id;
+        window.location.href = payhipUrl;
     }
 </script>
 
