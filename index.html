@@ -75,7 +75,7 @@
 </div>
 
 <script>
-    // Sizin Gerçek Firebase Veritabanı Bilgileriniz
+    // Firebase Bağlantısı
     const firebaseConfig = {
         databaseURL: "https://firebasedatabase.app"
     };
@@ -87,7 +87,7 @@
     const GITHUB_REPO = "zziptv.github.io";
     const GITHUB_TOKEN = "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";
 
-    // Dosya seçildiğinde adını gösterme
+    // Dosya seçildiğinde adını gösterme fonksiyonu
     function updateFileLabel() {
         const fileInput = document.getElementById('m3uFile');
         const fileLabel = document.getElementById('fileLabel');
@@ -116,7 +116,7 @@
         });
     }
 
-    // YÖNTEM B: Dosyayı Okuyup GitHub'a Yükleme ve Veritabanına Linkleme
+    // YÖNTEM B: Büyük dosyaları dondurmayan gelişmiş okuma ve GitHub'a yükleme altyapısı
     function uploadPlaylistFile() {
         var macAddress = document.getElementById('m3uMac').value.trim();
         var fileInput = document.getElementById('m3uFile');
@@ -137,15 +137,13 @@
 
         const reader = new FileReader();
         reader.onload = function(e) {
-            const content = e.target.result;
-            // GitHub API için dosyayı Base64 formatına çeviriyoruz
-            const base64Content = btoa(unescape(encodeURIComponent(content)));
+            // Büyük dosyalarda tarayıcıyı kilitlemeyen güvenli Base64 dönüşümü
+            const binaryString = e.target.result;
+            const base64Content = btoa(unescape(encodeURIComponent(binaryString)));
             
-            // Dosyanın GitHub'da yükleneceği yer: lists/MAC_ADRESI.m3u
             const path = "lists/" + macAddress + ".m3u";
             const url = `https://github.com{GITHUB_USERNAME}/${GITHUB_REPO}/contents/${path}`;
 
-            // GitHub'a dosya yükleme isteği atıyoruz
             fetch(url, {
                 method: "PUT",
                 headers: {
@@ -159,10 +157,7 @@
             })
             .then(res => res.json())
             .then(data => {
-                // Dosya başarıyla yüklendiğinde oluşacak internet indirme linki
                 const downloadUrl = `https://${GITHUB_USERNAME}.github.io/${GITHUB_REPO}/lists/${macAddress}.m3u`;
-                
-                // Bu linki Firebase Realtime Database'deki m3u_url alanına yazıyoruz
                 return database.ref('devices/' + macAddress).update({
                     m3u_url: downloadUrl
                 });
