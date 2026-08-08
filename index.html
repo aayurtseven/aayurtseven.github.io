@@ -13,6 +13,7 @@
         .card h3 { margin: 0 0 15px 0; font-size: 16px; color: #f39c12; }
         .input-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 6px; color: #dddddd; font-size: 13px; }
+        .instructions { background: #1a1a1a; padding: 10px; border-radius: 6px; font-size: 12px; color: #f1c40f; margin-bottom: 12px; border-left: 3px solid #f39c12; line-height: 1.4; }
         input, textarea { width: 100%; padding: 10px; border: 1px solid #444; border-radius: 6px; background-color: #1a1a1a; color: #fff; box-sizing: border-box; font-size: 15px; text-align: center; }
         input:focus, textarea:focus { border-color: #f39c12; outline: none; }
         textarea { height: 100px; font-family: monospace; font-size: 12px; text-align: left; resize: none; }
@@ -53,6 +54,12 @@
         <!-- YÖNTEM B: METIN OLARAK YAPIŞTIRMA -->
         <div class="input-group">
             <label>M3U Dosya İçeriğini Yapıştırın (Yöntem B)</label>
+            <div class="instructions">
+                <strong>Nasıl Yapılır?</strong><br>
+                1. Bilgisayarınızdaki veya telefonunuzdaki .m3u dosyanıza sağ tıklayıp <strong>Not Defteri (Notepad)</strong> ile açın.<br>
+                2. İçindeki tüm yazıları tamamen kopyalayın.<br>
+                3. Aşağıdaki kutuya yapıştırıp "Gönder" butonuna basın.
+            </div>
             <textarea id="m3uContent" placeholder="#EXTM3U&#10;#EXTINF:-1,Kanal Adı&#10;http://..."></textarea>
         </div>
         <button class="btn btn-orange" id="uploadTextBtn" onclick="uploadPlaylistText()">M3U İçeriğini Gönder</button>
@@ -90,7 +97,7 @@
         
         database.ref('devices/' + macAddress).update({
             m3u_url: m3uUrl,
-            m3u_text: null // Diğer yöntem temizlenir
+            m3u_text: null
         }).then(() => {
             alert('M3U linkiniz başarıyla kaydedildi!');
         }).catch((error) => {
@@ -98,7 +105,7 @@
         });
     }
 
-    // YÖNTEM B: M3U Metnini Doğrudan Firebase'e Gönderme (ASLA DONMAZ)
+    // YÖNTEM B: M3U Metnini Doğrudan Firebase'e Gönderme
     function uploadPlaylistText() {
         var macAddress = document.getElementById('m3uMac').value.trim();
         var m3uText = document.getElementById('m3uContent').value.trim();
@@ -116,10 +123,9 @@
         btn.innerText = "Gönderiliyor...";
         btn.disabled = true;
 
-        // İçeriği doğrudan Firebase'e "m3u_text" olarak yazıyoruz
         database.ref('devices/' + macAddress).update({
             m3u_text: m3uText,
-            m3u_url: null // Diğer yöntem temizlenir
+            m3u_url: null
         }).then(() => {
             alert('M3U kanal listesi içeriğiniz başarıyla cihazınıza yüklendi!');
             btn.innerText = "M3U İçeriğini Gönder";
