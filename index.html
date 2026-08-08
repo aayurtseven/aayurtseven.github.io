@@ -21,7 +21,7 @@
         .btn-blue { background-color: #2980b9; color: #fff; }
         .btn-blue:hover { background-color: #3498db; }
     </style>
-    <!-- Firebase Bağlantısı (Kanal Listesini Göndermek İçin) -->
+    <!-- Firebase SDK Bağlantıları -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 </head>
@@ -29,14 +29,14 @@
 
 <div class="container">
     <h2>ZZIptv Kontrol Paneli</h2>
-    <div class="subtitle">Cihazınızı aktif edin ve kanal listenizi yükleyin.</div>
+    <div class="subtitle">MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.</div>
     
     <!-- 1. BÖLÜM: M3U KANAL YÜKLEME -->
     <div class="card">
         <h3>1. Kanal Listesi (M3U) Yükle</h3>
         <div class="input-group">
-            <label>Cihaz Kodu (Android ID)</label>
-            <input type="text" id="m3uMac" placeholder="Uygulamadaki Cihaz Kodunu Girin">
+            <label>MAC Adresi</label>
+            <input type="text" id="m3uMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
         </div>
         <div class="input-group">
             <label>M3U Plus URL (Kanal Listenizin Linki)</label>
@@ -50,34 +50,32 @@
         <h3>2. Ömür Boyu Lisans Aktif Et</h3>
         <p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;">7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.</p>
         <div class="input-group">
-            <label>Cihaz Kodu (Android ID)</label>
-            <input type="text" id="payMac" placeholder="Uygulamadaki Cihaz Kodunu Girin">
+            <label>MAC Adresi</label>
+            <input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
         </div>
         <button class="btn btn-orange" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
     </div>
 </div>
 
 <script>
-    // FİRREBASE YAPILANDIRMASI 
-    // (Firebase panelinizdeki "Project Settings" alanındaki kendi bilgilerinizi buraya yazın)
+    // Sizin Gerçek Belçika Lokasyonlu Firebase Veritabanı Adresiniz
     const firebaseConfig = {
-        databaseURL: "https://PROJE_ID_BURAYA.europe-west3.firebasedatabase.app"
+        databaseURL: "https://firebasedatabase.app"
     };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
     // M3U URL'sini Firebase'e Kaydetme Fonksiyonu
     function uploadPlaylist() {
-        var deviceId = document.getElementById('m3uMac').value.trim();
+        var macAddress = document.getElementById('m3uMac').value.trim();
         var m3uUrl = document.getElementById('m3uUrl').value.trim();
         
-        if (deviceId.length < 5 || m3uUrl.length < 10) {
-            alert('Lütfen geçerli bir Cihaz Kodu ve M3U URL girin.');
+        if (macAddress.length < 5 || m3uUrl.length < 10) {
+            alert('Lütfen geçerli bir MAC Adresi ve M3U URL girin.');
             return;
         }
         
-        // Firebase'de devices/CIHAZ_KODU altına m3u_url değerini yazıyoruz
-        database.ref('devices/' + deviceId).update({
+        database.ref('devices/' + macAddress).update({
             m3u_url: m3uUrl
         }).then(() => {
             alert('Kanal listeniz başarıyla gönderildi! Uygulamayı kapatıp açabilirsiniz.');
@@ -88,13 +86,13 @@
 
     // Ödeme Sayfasına Yönlendirme Fonksiyonu
     function redirectToPayment() {
-        var id = document.getElementById('payMac').value.trim();
-        if (id.length < 5) {
-            alert('Lütfen geçerli bir Cihaz Kodu girin.');
+        var macAddress = document.getElementById('payMac').value.trim();
+        if (macAddress.length < 5) {
+            alert('Lütfen geçerli bir MAC Adresi girin.');
             return;
         }
         // Pazartesi günü iyzico onaylanınca Payhip linkinizi buraya koyacaksınız
-        var payhipUrl = "https://payhip.com[custom][device_id]=" + id;
+        var payhipUrl = "https://payhip.com[custom][device_id]=" + macAddress;
         window.location.href = payhipUrl;
     }
 </script>
