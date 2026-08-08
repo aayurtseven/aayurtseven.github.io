@@ -75,11 +75,8 @@
 </div>
 
 <script>
-    // Başına kesinlikle https:// protokolü tam olarak eklenmiştir
+    // Gerçek ve Hatasız REST API Sunucu Bağlantınız
     const FIREBASE_DB_URL = "https://firebasedatabase.app";
-    
-    // Firebase panelinden aldığınız Database Secret kodunu buraya yazın:
-    const FIREBASE_SECRET = "45uap8S2dUS4aMb55sRVHJ7ZA6GKbuyI6OGXkEAT";
 
     function uploadPlaylistUrl() {
         var macAddress = document.getElementById('m3uMac').value.trim();
@@ -90,7 +87,7 @@
             return;
         }
 
-        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json?auth=" + FIREBASE_SECRET;
+        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
         
         fetch(targetUrl, {
             method: "PATCH",
@@ -121,7 +118,7 @@
             return;
         }
 
-        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json?auth=" + FIREBASE_SECRET;
+        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
 
         fetch(targetUrl, {
             method: "PATCH",
