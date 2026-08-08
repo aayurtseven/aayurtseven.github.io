@@ -74,7 +74,7 @@
     </div>
 </div>
 
-<!-- Kesin ve Doğrudan Veri Gönderim Sağlayan HTTP REST Bağlantısı -->
+<!-- Yetki Kısıtlamasını Kaldıran Güvenli REST API İstek Mantığı -->
 <script>
     const FIREBASE_DB_URL = "https://firebasedatabase.app";
 
@@ -87,12 +87,11 @@
             return;
         }
 
-        // URL formatı kesinleştirildi (.json eklendi)
+        // İstek adresine doğrudan .json uzantısı eklenerek Firebase entegrasyonu tamamlandı
         var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
         
         fetch(targetUrl, {
             method: "PATCH",
-            mode: "cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 m3u_url: m3uUrl,
@@ -124,7 +123,6 @@
 
         fetch(targetUrl, {
             method: "PATCH",
-            mode: "cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 m3u_text: m3uText,
@@ -144,6 +142,7 @@
         });
     }
 
+    // iyzico entegrasyonu tamamlandığında burası güncellenecektir
     function redirectToPayment() {
         var macAddress = document.getElementById('payMac').value.trim();
         if (macAddress.length < 5) {
