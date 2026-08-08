@@ -24,9 +24,6 @@
         .btn-blue:hover { background-color: #3498db; }
         .divider { text-align: center; margin: 15px 0; font-size: 12px; color: #777; text-transform: uppercase; font-weight: bold; }
     </style>
-    <!-- Firebase Realtime Database Kütüphaneleri -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
 </head>
 <body>
 
@@ -47,7 +44,7 @@
             <label>M3U Plus URL (Yöntem A)</label>
             <input type="text" id="m3uUrl" placeholder="https://domain.com?...">
         </div>
-        <button class="btn btn-blue" onclick="uploadPlaylistUrl()">M3U Linki Gönder</button>
+        <button class="btn btn-blue" id="btnUrlSubmit">M3U Linki Gönder</button>
         
         <div class="divider">Veya</div>
         
@@ -62,7 +59,7 @@
             </div>
             <textarea id="m3uContent" placeholder="#EXTM3U&#10;#EXTINF:-1,Kanal Adı&#10;http://..."></textarea>
         </div>
-        <button class="btn btn-orange" id="uploadTextBtn" onclick="uploadPlaylistText()">M3U İçeriğini Gönder</button>
+        <button class="btn btn-orange" id="btnTextSubmit">M3U İçeriğini Gönder</button>
     </div>
     
     <!-- 2. BÖLÜM: PREMIUM AKTİVASYON -->
@@ -73,75 +70,73 @@
             <label>MAC Adresi</label>
             <input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
         </div>
-        <button class="btn btn-orange" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
+        <button class="btn btn-orange" id="btnPaySubmit">Ödeme Yap ve Aktif Et</button>
     </div>
 </div>
 
-<script>
-    // Firebase Bağlantısı
+<!-- En Güncel Firebase v10 Modülleri (Lokasyon Hatalarını Çözer) -->
+<script type="module">
+    import { initializeApp } from "https://gstatic.com";
+    import { getDatabase, ref, update } from "https://gstatic.com";
+
+    // Sizin Gerçek Belçika Lokasyonlu Bağlantınız
     const firebaseConfig = {
         databaseURL: "https://firebasedatabase.app"
     };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
 
-    // YÖNTEM A: M3U URL'sini Veritabanına Yazma
-    function uploadPlaylistUrl() {
-        var macAddress = document.getElementById('m3uMac').value.trim();
-        var m3uUrl = document.getElementById('m3uUrl').value.trim();
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // YÖNTEM A: M3U Linki Gönderme
+    document.getElementById('btnUrlSubmit').addEventListener('click', () => {
+        const macAddress = document.getElementById('m3uMac').value.trim();
+        const m3uUrl = document.getElementById('m3uUrl').value.trim();
         
         if (macAddress.length < 5 || m3uUrl.length < 10) {
             alert('Lütfen geçerli bir MAC Adresi ve M3U URL girin.');
             return;
         }
-        
-        database.ref('devices/' + macAddress).update({
+
+        update(ref(database, 'devices/' + macAddress), {
             m3u_url: m3uUrl,
             m3u_text: null
         }).then(() => {
             alert('M3U linkiniz başarıyla kaydedildi!');
         }).catch((error) => {
-            alert('Hata: ' + error.message);
+            alert('Bağlantı hatası: ' + error.message);
         });
-    }
+    });
 
-    // YÖNTEM B: M3U Metnini Doğrudan Firebase'e Gönderme
-    function uploadPlaylistText() {
-        var macAddress = document.getElementById('m3uMac').value.trim();
-        var m3uText = document.getElementById('m3uContent').value.trim();
+    // YÖNTEM B: M3U Metni Gönderme
+    document.getElementById('btnTextSubmit').addEventListener('click', () => {
+        const macAddress = document.getElementById('m3uMac').value.trim();
+        const m3uText = document.getElementById('m3uContent').value.trim();
         
-        if (macAddress.length < 5) {
-            alert('Lütfen önce geçerli bir MAC Adresi girin.');
-            return;
-        }
-        if (m3uText.length < 10) {
-            alert('Lütfen geçerli bir M3U içeriği yapıştırın.');
+        if (macAddress.length < 5 || m3uText.length < 10) {
+            alert('Lütfen geçerli bir MAC Adresi ve M3U içeriği girin.');
             return;
         }
 
-        const btn = document.getElementById('uploadTextBtn');
-        btn.innerText = "Gönderiliyor...";
-        btn.disabled = true;
-
-        database.ref('devices/' + macAddress).update({
+        update(ref(database, 'devices/' + macAddress), {
             m3u_text: m3uText,
             m3u_url: null
         }).then(() => {
-            alert('M3U kanal listesi içeriğiniz başarıyla cihazınıza yüklendi!');
-            btn.innerText = "M3U İçeriğini Gönder";
-            btn.disabled = false;
+            alert('M3U kanal listesi içeriğiniz başarıyla yüklendi!');
             document.getElementById('m3uContent').value = "";
         }).catch((error) => {
-            alert('Hata: ' + error.message);
-            btn.innerText = "M3U İçeriğini Gönder";
-            btn.disabled = false;
+            alert('Bağlantı hatası: ' + error.message);
         });
-    }
+    });
 
-    // Ödeme Sayfasına Yönlendirme (iyzico onayı sonrası güncellenecek)
-    function redirectToPayment() {
+    // Ödeme Sayfası Butonu
+    document.getElementById('btnPaySubmit').addEventListener('click', () => {
+        const macAddress = document.getElementById('payMac').value.trim();
+        if (macAddress.length < 5) {
+            alert('Lütfen geçerli bir MAC Adresi girin.');
+            return;
+        }
         alert("Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin.");
-    }
+    });
 </script>
 
 </body>
