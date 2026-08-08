@@ -75,9 +75,10 @@
 </div>
 
 <script>
+    // Başına kesinlikle https:// protokolü tam olarak eklenmiştir
     const FIREBASE_DB_URL = "https://firebasedatabase.app";
     
-    // 1. ADIMDA KOPYALADIĞINIZ VERİTABANI GİZLİ ANAHTARINI (SECRET) AŞAĞIDAKİ TIRNAKLARIN İÇİNE YAPIŞTIRIN:
+    // Firebase panelinden aldığınız Database Secret kodunu buraya yazın:
     const FIREBASE_SECRET = "45uap8S2dUS4aMb55sRVHJ7ZA6GKbuyI6OGXkEAT";
 
     function uploadPlaylistUrl() {
@@ -89,7 +90,6 @@
             return;
         }
 
-        // Yetkilendirme parametresi (auth) URL'e güvenli şekilde eklendi
         var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json?auth=" + FIREBASE_SECRET;
         
         fetch(targetUrl, {
