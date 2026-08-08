@@ -74,9 +74,11 @@
     </div>
 </div>
 
-<!-- Yetki Kısıtlamasını Kaldıran Güvenli REST API İstek Mantığı -->
 <script>
     const FIREBASE_DB_URL = "https://firebasedatabase.app";
+    
+    // 1. ADIMDA KOPYALADIĞINIZ VERİTABANI GİZLİ ANAHTARINI (SECRET) AŞAĞIDAKİ TIRNAKLARIN İÇİNE YAPIŞTIRIN:
+    const FIREBASE_SECRET = "45uap8S2dUS4aMb55sRVHJ7ZA6GKbuyI6OGXkEAT";
 
     function uploadPlaylistUrl() {
         var macAddress = document.getElementById('m3uMac').value.trim();
@@ -87,8 +89,8 @@
             return;
         }
 
-        // İstek adresine doğrudan .json uzantısı eklenerek Firebase entegrasyonu tamamlandı
-        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
+        // Yetkilendirme parametresi (auth) URL'e güvenli şekilde eklendi
+        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json?auth=" + FIREBASE_SECRET;
         
         fetch(targetUrl, {
             method: "PATCH",
@@ -102,7 +104,7 @@
             if (response.ok) {
                 alert('M3U linkiniz başarıyla kaydedildi!');
             } else {
-                alert('Firebase veri yazma hatası oluştu: ' + response.statusText);
+                alert('Firebase veri yazma hatası: ' + response.status);
             }
         })
         .catch(error => {
@@ -119,7 +121,7 @@
             return;
         }
 
-        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json";
+        var targetUrl = FIREBASE_DB_URL + "/devices/" + macAddress + ".json?auth=" + FIREBASE_SECRET;
 
         fetch(targetUrl, {
             method: "PATCH",
@@ -134,7 +136,7 @@
                 alert('M3U kanal listesi içeriğiniz başarıyla yüklendi!');
                 document.getElementById('m3uContent').value = "";
             } else {
-                alert('Firebase veri yazma hatası oluştu: ' + response.statusText);
+                alert('Firebase veri yazma hatası: ' + response.status);
             }
         })
         .catch(error => {
@@ -142,7 +144,6 @@
         });
     }
 
-    // iyzico entegrasyonu tamamlandığında burası güncellenecektir
     function redirectToPayment() {
         var macAddress = document.getElementById('payMac').value.trim();
         if (macAddress.length < 5) {
