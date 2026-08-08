@@ -76,7 +76,9 @@
 
 <!-- GSTATIC bağımlılığı olmayan, doğrudan HTTP REST API üzerinden çalışan güvenli script -->
 <script>
+    // DÜZELTİLDİ: google-services.json içindeki gerçek firebase_url kullanıldı
     const FIREBASE_DB_URL = "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app";
+
     function uploadPlaylistUrl() {
         var macAddress = document.getElementById('m3uMac').value.trim();
         var m3uUrl = document.getElementById('m3uUrl').value.trim();
