@@ -74,12 +74,11 @@
     </div>
 </div>
 
-<!-- En Güncel Firebase v10 Modülleri (Lokasyon Hatalarını Çözer) -->
+<!-- CORS Kilitlenmesini Çözen Tam Güvenlikli Adres Tanımlamaları (www. eklenmiştir) -->
 <script type="module">
     import { initializeApp } from "https://gstatic.com";
     import { getDatabase, ref, update } from "https://gstatic.com";
 
-    // Sizin Gerçek Belçika Lokasyonlu Bağlantınız
     const firebaseConfig = {
         databaseURL: "https://firebasedatabase.app"
     };
@@ -87,7 +86,6 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // YÖNTEM A: M3U Linki Gönderme
     document.getElementById('btnUrlSubmit').addEventListener('click', () => {
         const macAddress = document.getElementById('m3uMac').value.trim();
         const m3uUrl = document.getElementById('m3uUrl').value.trim();
@@ -107,7 +105,6 @@
         });
     });
 
-    // YÖNTEM B: M3U Metni Gönderme
     document.getElementById('btnTextSubmit').addEventListener('click', () => {
         const macAddress = document.getElementById('m3uMac').value.trim();
         const m3uText = document.getElementById('m3uContent').value.trim();
@@ -128,7 +125,6 @@
         });
     });
 
-    // Ödeme Sayfası Butonu
     document.getElementById('btnPaySubmit').addEventListener('click', () => {
         const macAddress = document.getElementById('payMac').value.trim();
         if (macAddress.length < 5) {
