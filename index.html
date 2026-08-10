@@ -99,6 +99,21 @@ const database = firebase.database();
 const urlParams = new URLSearchParams(window.location.search);
 const paramMac = urlParams.get('mac');
 const paramUid = urlParams.get('uid');
+    // URL'den email parametresini al
+const paramEmail = urlParams.get('email');
+
+// updateAccountBadge fonksiyonunu şu şekilde güncelle:
+function updateAccountBadge() {
+    const badge = document.getElementById('accountBadge');
+    if (paramUid) {
+        badge.style.display = 'block';
+        // E-posta varsa onu göster, yoksa sadece UID'yi göster
+        const displayText = paramEmail ? paramEmail : paramUid;
+        badge.innerText = langData[currentLang].accountBadge + displayText;
+    } else {
+        badge.style.display = 'none';
+    }
+}
 
 // Dil Paketleri Sözlüğü
 const langData = {
