@@ -1,235 +1,276 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="siteTitle">ZZIptv - Yönetim ve Aktivasyon Merkezi</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; position: relative; }
-        .lang-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
-        .lang-btn { background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s; }
-        .lang-btn.active { background: #f39c12; color: #121212; border-color: #f39c12; }
-        .container { background-color: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 450px; margin-top: 40px; }
-        h2 { color: #f39c12; margin-top: 0; margin-bottom: 5px; }
-        .subtitle { color: #aaaaaa; font-size: 14px; margin-bottom: 25px; }
-        .card { background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left; border-top: 4px solid #f39c12; }
-        .card h3 { margin: 0 0 15px 0; font-size: 16px; color: #f39c12; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 6px; color: #dddddd; font-size: 13px; }
-        .instructions { background: #1a1a1a; padding: 10px; border-radius: 6px; font-size: 12px; color: #f1c40f; margin-bottom: 12px; border-left: 3px solid #f39c12; line-height: 1.4; }
-        input[type="text"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #444; border-radius: 6px; background-color: #1a1a1a; color: #fff; box-sizing: border-box; font-size: 14px; }
-        input[type="text"] { text-align: center; }
-        input[type="file"] { cursor: pointer; padding: 8px; }
-        input:focus { border-color: #f39c12; outline: none; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 5px; }
-        .btn-orange { background-color: #f39c12; color: #121212; }
-        .btn-orange:hover { background-color: #e67e22; }
-        .btn-blue { background-color: #2980b9; color: #fff; }
-        .btn-blue:hover { background-color: #3498db; }
-        .divider { text-align: center; margin: 15px 0; font-size: 12px; color: #777; text-transform: uppercase; font-weight: bold; }
-    </style>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="siteTitle">ZZIptv - Yönetim ve Aktivasyon Merkezi</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; position: relative; }
+.lang-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
+.lang-btn { background: #2a2a2a; color: #fff; border: 1px solid #444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s; }
+.lang-btn.active { background: #f39c12; color: #121212; border-color: #f39c12; }
+.container { background-color: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 450px; margin-top: 40px; }
+h2 { color: #f39c12; margin-top: 0; margin-bottom: 5px; }
+.subtitle { color: #aaaaaa; font-size: 14px; margin-bottom: 25px; }
+.card { background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left; border-top: 4px solid #f39c12; }
+.card h3 { margin: 0 0 15px 0; font-size: 16px; color: #f39c12; }
+.input-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 6px; color: #dddddd; font-size: 13px; }
+.instructions { background: #1a1a1a; padding: 10px; border-radius: 6px; font-size: 12px; color: #f1c40f; margin-bottom: 12px; border-left: 3px solid #f39c12; line-height: 1.4; }
+.account-badge { background: #1a1a1a; padding: 8px 10px; border-radius: 6px; font-size: 12px; color: #3498db; margin-bottom: 12px; border-left: 3px solid #2980b9; line-height: 1.4; word-break: break-all; }
+input[type="text"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #444; border-radius: 6px; background-color: #1a1a1a; color: #fff; box-sizing: border-box; font-size: 14px; }
+input[type="text"] { text-align: center; }
+input[type="text"]:read-only { color: #999; background-color: #151515; cursor: not-allowed; }
+input[type="file"] { cursor: pointer; padding: 8px; }
+input:focus { border-color: #f39c12; outline: none; }
+.btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 5px; }
+.btn-orange { background-color: #f39c12; color: #121212; }
+.btn-orange:hover { background-color: #e67e22; }
+.btn-blue { background-color: #2980b9; color: #fff; }
+.btn-blue:hover { background-color: #3498db; }
+.divider { text-align: center; margin: 15px 0; font-size: 12px; color: #777; text-transform: uppercase; font-weight: bold; }
+</style>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
 <div class="lang-switcher">
-    <button class="lang-btn active" id="btnLangTR" onclick="setLanguage('tr')">TR</button>
-    <button class="lang-btn" id="btnLangEN" onclick="setLanguage('en')">EN</button>
+<button class="lang-btn active" id="btnLangTR" onclick="setLanguage('tr')">TR</button>
+<button class="lang-btn" id="btnLangEN" onclick="setLanguage('en')">EN</button>
 </div>
 
 <div class="container">
-    <h2 id="mainTitle">ZZIptv Kontrol Paneli</h2>
-    <div class="subtitle" id="mainSubtitle">MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.</div>
-    
-    <div class="card">
-        <h3 id="section1Title">1. Kanal Listesi (M3U) Yükle</h3>
-        <div class="input-group">
-            <label class="lblMac">MAC Adresi</label>
-            <input type="text" id="m3uMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
-        </div>
-        
-        <div class="input-group">
-            <label id="lblM3uUrl">M3U Plus URL (Yöntem A)</label>
-            <input type="text" id="m3uUrl" placeholder="https://domain.com?...">
-        </div>
-        <button class="btn btn-blue" id="btnSendUrl" onclick="uploadPlaylistUrl()">M3U Linki Gönder</button>
-        
-        <div class="divider" id="txtOr">Veya</div>
-        
-        <div class="input-group">
-            <label id="lblM3uFile">M3U / M3U8 Dosyası Seç (Yöntem B)</label>
-            <div class="instructions" id="txtInstructions">
-                <strong>Nasıl Yapılır?</strong><br>
-                1. Cihazınızdaki <strong>.m3u</strong> veya <strong>.m3u8</strong> dosyanızı seçin.<br>
-                2. "Dosyayı Yükle ve Gönder" butonuna basın.
-            </div>
-            <input type="file" id="m3uFileInput" accept=".m3u, .m3u8">
-        </div>
-        <button class="btn btn-orange" id="btnSendFile" onclick="uploadPlaylistFile()">Dosyayı Yükle ve Gönder</button>
-    </div>
-    
-    <div class="card">
-        <h3 id="section2Title">2. Ömür Boyu Lisans Aktif Et</h3>
-        <p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;" id="txtPayDesc">7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.</p>
-        <div class="input-group">
-            <label class="lblMac">MAC Adresi</label>
-            <input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
-        </div>
-        <button class="btn btn-orange" id="btnPay" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
-    </div>
+<h2 id="mainTitle">ZZIptv Kontrol Paneli</h2>
+<div class="subtitle" id="mainSubtitle">MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.</div>
+
+<div class="card">
+<h3 id="section1Title">1. Kanal Listesi (M3U) Yükle</h3>
+
+<div id="accountBadge" class="account-badge" style="display:none;"></div>
+
+<div class="input-group">
+<label class="lblMac">MAC Adresi</label>
+<input type="text" id="m3uMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
+</div>
+<div class="input-group">
+<label id="lblM3uUrl">M3U Plus URL (Yöntem A)</label>
+<input type="text" id="m3uUrl" placeholder="https://domain.com?...">
+</div>
+<button class="btn btn-blue" id="btnSendUrl" onclick="uploadPlaylistUrl()">M3U Linki Gönder</button>
+
+<div class="divider" id="txtOr">Veya</div>
+
+<div class="input-group">
+<label id="lblM3uFile">M3U / M3U8 Dosyası Seç (Yöntem B)</label>
+<div class="instructions" id="txtInstructions">
+<strong>Nasıl Yapılır?</strong><br>
+1. Cihazınızdaki <strong>.m3u</strong> veya <strong>.m3u8</strong> dosyanızı seçin.<br>
+2. "Dosyayı Yükle ve Gönder" butonuna basın.
+</div>
+<input type="file" id="m3uFileInput" accept=".m3u, .m3u8">
+</div>
+<button class="btn btn-orange" id="btnSendFile" onclick="uploadPlaylistFile()">Dosyayı Yükle ve Gönder</button>
+</div>
+
+<div class="card">
+<h3 id="section2Title">2. Ömür Boyu Lisans Aktif Et</h3>
+<p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;" id="txtPayDesc">7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.</p>
+<div class="input-group">
+<label class="lblMac">MAC Adresi</label>
+<input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
+</div>
+<button class="btn btn-orange" id="btnPay" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
+</div>
+
 </div>
 
 <script>
-    const FIREBASE_DB_URL = "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app";
+const FIREBASE_DB_URL = "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app";
+const firebaseConfig = {
+    databaseURL: FIREBASE_DB_URL
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-    const firebaseConfig = {
-        databaseURL: FIREBASE_DB_URL
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+// --- YENİ: URL parametrelerinden mac ve uid oku ---
+// Uygulama "Kanal Yükle" butonuna bastığında linke bu parametreleri ekliyor:
+// https://.../?mac=95:70:B2:26:1C:3F&uid=abc123
+const urlParams = new URLSearchParams(window.location.search);
+const paramMac = urlParams.get('mac');
+const paramUid = urlParams.get('uid');
 
-    // Dil Paketleri Sözlüğü
-    const langData = {
-        tr: {
-            title: "ZZIptv - Yönetim ve Aktivasyon Merkezi",
-            mainTitle: "ZZIptv Kontrol Paneli",
-            mainSubtitle: "MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.",
-            section1Title: "1. Kanal Listesi (M3U) Yükle",
-            lblMac: "MAC Adresi",
-            lblM3uUrl: "M3U Plus URL (Yöntem A)",
-            btnSendUrl: "M3U Linki Gönder",
-            txtOr: "Veya",
-            lblM3uFile: "M3U / M3U8 Dosyası Seç (Yöntem B)",
-            instructions: "<strong>Nasıl Yapılır?</strong><br>1. Cihazınızdaki <strong>.m3u</strong> veya <strong>.m3u8</strong> dosyanızı seçin.<br>2. \"Dosyayı Yükle ve Gönder\" butonuna basın.",
-            btnSendFile: "Dosyayı Yükle ve Gönder",
-            section2Title: "2. Ömür Boyu Lisans Aktif Et",
-            txtPayDesc: "7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.",
-            btnPay: "Ödeme Yap ve Aktif Et",
-            alertValid: "Lütfen geçerli bir MAC Adresi ve bir dosya seçin.",
-            alertSuccessUrl: "M3U linkiniz başarıyla kaydedildi!",
-            alertSuccessFile: "M3U/M3U8 dosya içeriğiniz başarıyla yüklendi!",
-            alertPayProgress: "Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin."
-        },
-        en: {
-            title: "ZZIptv - Management & Activation Center",
-            mainTitle: "ZZIptv Control Panel",
-            mainSubtitle: "Upload playlists or activate your device via your MAC address.",
-            section1Title: "1. Upload Channel List (M3U)",
-            lblMac: "MAC Address",
-            lblM3uUrl: "M3U Plus URL (Method A)",
-            btnSendUrl: "Send M3U Link",
-            txtOr: "Or",
-            lblM3uFile: "Select M3U / M3U8 File (Method B)",
-            instructions: "<strong>How to do?</strong><br>1. Select your <strong>.m3u</strong> or <strong>.m3u8</strong> file on your device.<br>2. Press the \"Upload and Send File\" button.",
-            btnSendFile: "Upload and Send File",
-            section2Title: "2. Activate Lifetime License",
-            txtPayDesc: "If your 7-day trial has expired or you want unlimited access, make your payment here.",
-            btnPay: "Pay and Activate Now",
-            alertValid: "Please enter a valid MAC Address and select a file.",
-            alertSuccessUrl: "Your M3U link has been saved successfully!",
-            alertSuccessFile: "Your M3U/M3U8 file content has been uploaded successfully!",
-            alertPayProgress: "Payment system is under iyzico approval. Please try again later."
-        }
-    };
+// Dil Paketleri Sözlüğü
+const langData = {
+    tr: {
+        title: "ZZIptv - Yönetim ve Aktivasyon Merkezi",
+        mainTitle: "ZZIptv Kontrol Paneli",
+        mainSubtitle: "MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.",
+        section1Title: "1. Kanal Listesi (M3U) Yükle",
+        lblMac: "MAC Adresi",
+        lblM3uUrl: "M3U Plus URL (Yöntem A)",
+        btnSendUrl: "M3U Linki Gönder",
+        txtOr: "Veya",
+        lblM3uFile: "M3U / M3U8 Dosyası Seç (Yöntem B)",
+        instructions: "<strong>Nasıl Yapılır?</strong><br>1. Cihazınızdaki <strong>.m3u</strong> veya <strong>.m3u8</strong> dosyanızı seçin.<br>2. \"Dosyayı Yükle ve Gönder\" butonuna basın.",
+        btnSendFile: "Dosyayı Yükle ve Gönder",
+        section2Title: "2. Ömür Boyu Lisans Aktif Et",
+        txtPayDesc: "7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.",
+        btnPay: "Ödeme Yap ve Aktif Et",
+        alertValid: "Lütfen geçerli bir MAC Adresi ve bir dosya seçin.",
+        alertSuccessUrl: "M3U linkiniz başarıyla kaydedildi!",
+        alertSuccessFile: "M3U/M3U8 dosya içeriğiniz başarıyla yüklendi!",
+        alertPayProgress: "Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin.",
+        accountBadge: "Bağlı hesap kimliği: "
+    },
+    en: {
+        title: "ZZIptv - Management & Activation Center",
+        mainTitle: "ZZIptv Control Panel",
+        mainSubtitle: "Upload playlists or activate your device via your MAC address.",
+        section1Title: "1. Upload Channel List (M3U)",
+        lblMac: "MAC Address",
+        lblM3uUrl: "M3U Plus URL (Method A)",
+        btnSendUrl: "Send M3U Link",
+        txtOr: "Or",
+        lblM3uFile: "Select M3U / M3U8 File (Method B)",
+        instructions: "<strong>How to do?</strong><br>1. Select your <strong>.m3u</strong> or <strong>.m3u8</strong> file on your device.<br>2. Press the \"Upload and Send File\" button.",
+        btnSendFile: "Upload and Send File",
+        section2Title: "2. Activate Lifetime License",
+        txtPayDesc: "If your 7-day trial has expired or you want unlimited access, make your payment here.",
+        btnPay: "Pay and Activate Now",
+        alertValid: "Please enter a valid MAC Address and select a file.",
+        alertSuccessUrl: "Your M3U link has been saved successfully!",
+        alertSuccessFile: "Your M3U/M3U8 file content has been uploaded successfully!",
+        alertPayProgress: "Payment system is under iyzico approval. Please try again later.",
+        accountBadge: "Connected account ID: "
+    }
+};
 
-    let currentLang = 'tr';
+let currentLang = 'tr';
 
-    function setLanguage(lang) {
-        currentLang = lang;
-        document.getElementById('btnLangTR').classList.toggle('active', lang === 'tr');
-        document.getElementById('btnLangEN').classList.toggle('active', lang === 'en');
-        
-        document.getElementById('siteTitle').innerText = langData[lang].title;
-        document.getElementById('mainTitle').innerText = langData[lang].mainTitle;
-        document.getElementById('mainSubtitle').innerText = langData[lang].mainSubtitle;
-        document.getElementById('section1Title').innerText = langData[lang].section1Title;
-        document.getElementById('lblM3uUrl').innerText = langData[lang].lblM3uUrl;
-        document.getElementById('btnSendUrl').innerText = langData[lang].btnSendUrl;
-        document.getElementById('txtOr').innerText = langData[lang].txtOr;
-        document.getElementById('lblM3uFile').innerText = langData[lang].lblM3uFile;
-        document.getElementById('txtInstructions').innerHTML = langData[lang].instructions;
-        document.getElementById('btnSendFile').innerText = langData[lang].btnSendFile;
-        document.getElementById('section2Title').innerText = langData[lang].section2Title;
-        document.getElementById('txtPayDesc').innerText = langData[lang].txtPayDesc;
-        document.getElementById('btnPay').innerText = langData[lang].btnPay;
-        
-        document.querySelectorAll('.lblMac').forEach(el => {
-            el.innerText = langData[lang].lblMac;
+function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById('btnLangTR').classList.toggle('active', lang === 'tr');
+    document.getElementById('btnLangEN').classList.toggle('active', lang === 'en');
+    document.getElementById('siteTitle').innerText = langData[lang].title;
+    document.getElementById('mainTitle').innerText = langData[lang].mainTitle;
+    document.getElementById('mainSubtitle').innerText = langData[lang].mainSubtitle;
+    document.getElementById('section1Title').innerText = langData[lang].section1Title;
+    document.getElementById('lblM3uUrl').innerText = langData[lang].lblM3uUrl;
+    document.getElementById('btnSendUrl').innerText = langData[lang].btnSendUrl;
+    document.getElementById('txtOr').innerText = langData[lang].txtOr;
+    document.getElementById('lblM3uFile').innerText = langData[lang].lblM3uFile;
+    document.getElementById('txtInstructions').innerHTML = langData[lang].instructions;
+    document.getElementById('btnSendFile').innerText = langData[lang].btnSendFile;
+    document.getElementById('section2Title').innerText = langData[lang].section2Title;
+    document.getElementById('txtPayDesc').innerText = langData[lang].txtPayDesc;
+    document.getElementById('btnPay').innerText = langData[lang].btnPay;
+    document.querySelectorAll('.lblMac').forEach(el => {
+        el.innerText = langData[lang].lblMac;
+    });
+    updateAccountBadge();
+}
+
+function updateAccountBadge() {
+    const badge = document.getElementById('accountBadge');
+    if (paramUid) {
+        badge.style.display = 'block';
+        badge.innerText = langData[currentLang].accountBadge + paramUid;
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// --- YENİ: Sayfa açılırken mac/uid alanlarını otomatik doldur ---
+window.addEventListener('DOMContentLoaded', () => {
+    if (paramMac) {
+        const macFields = [document.getElementById('m3uMac'), document.getElementById('payMac')];
+        macFields.forEach(field => {
+            if (field) {
+                field.value = paramMac;
+                field.readOnly = true;
+            }
         });
     }
+    updateAccountBadge();
+});
 
-    function sanitizeMac(mac) {
+function sanitizeMac(mac) {
     return mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
 }
 
-    // Yöntem A: URL ile Kaydetme
-    function uploadPlaylistUrl() {
-        const macInput = document.getElementById('m3uMac').value;
-        const urlInput = document.getElementById('m3uUrl').value;
+// --- YENİ: Yazma hedefini belirleyen ortak fonksiyon ---
+// uid varsa -> playlists/{mac}/{uid}  (kullanıcıya özel, izole)
+// uid yoksa -> playlists/{mac}        (eski/guest davranışı, geriye dönük uyumluluk)
+function getTargetRef(cleanMac) {
+    if (paramUid) {
+        return database.ref('playlists/' + cleanMac + '/' + paramUid);
+    }
+    return database.ref('playlists/' + cleanMac);
+}
 
-        if (!macInput || !urlInput) {
-            alert(langData[currentLang].alertValid);
-            return;
-        }
+// Yöntem A: URL ile Kaydetme
+function uploadPlaylistUrl() {
+    const macInput = document.getElementById('m3uMac').value;
+    const urlInput = document.getElementById('m3uUrl').value;
 
+    if (!macInput || !urlInput) {
+        alert(langData[currentLang].alertValid);
+        return;
+    }
+
+    const cleanMac = sanitizeMac(macInput);
+    getTargetRef(cleanMac).set({
+        type: 'url',
+        content: urlInput.trim(),
+        updatedAt: Date.now()
+    }).then(() => {
+        alert(langData[currentLang].alertSuccessUrl);
+        document.getElementById('m3uUrl').value = '';
+    }).catch((error) => {
+        alert("Hata: " + error.message);
+    });
+}
+
+// Yöntem B: Dosya Seçerek Okuma ve Kaydetme
+function uploadPlaylistFile() {
+    const macInput = document.getElementById('m3uMac').value;
+    const fileInput = document.getElementById('m3uFileInput').files[0];
+
+    if (!macInput || !fileInput) {
+        alert(langData[currentLang].alertValid);
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const fileContent = e.target.result;
         const cleanMac = sanitizeMac(macInput);
-        database.ref('playlists/' + cleanMac).set({
-            type: 'url',
-            content: urlInput.trim(),
+        getTargetRef(cleanMac).set({
+            type: 'text',
+            content: fileContent.trim(),
             updatedAt: Date.now()
         }).then(() => {
-            alert(langData[currentLang].alertSuccessUrl);
-            document.getElementById('m3uUrl').value = '';
+            alert(langData[currentLang].alertSuccessFile);
+            document.getElementById('m3uFileInput').value = '';
         }).catch((error) => {
             alert("Hata: " + error.message);
         });
+    };
+    reader.onerror = function() {
+        alert("Dosya okunurken bir hata oluştu.");
+    };
+    reader.readAsText(fileInput);
+}
+
+function redirectToPayment() {
+    const payMacInput = document.getElementById('payMac').value;
+    if (!payMacInput) {
+        alert(langData[currentLang].alertValid);
+        return;
     }
-
-    // Yöntem B: Dosya Seçerek Okuma ve Kaydetme
-    function uploadPlaylistFile() {
-        const macInput = document.getElementById('m3uMac').value;
-        const fileInput = document.getElementById('m3uFileInput').files[0];
-
-        if (!macInput || !fileInput) {
-            alert(langData[currentLang].alertValid);
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const fileContent = e.target.result;
-            const cleanMac = sanitizeMac(macInput);
-
-            database.ref('playlists/' + cleanMac).set({
-                type: 'text',
-                content: fileContent.trim(),
-                updatedAt: Date.now()
-            }).then(() => {
-                alert(langData[currentLang].alertSuccessFile);
-                document.getElementById('m3uFileInput').value = '';
-            }).catch((error) => {
-                alert("Hata: " + error.message);
-            });
-        };
-
-        reader.onerror = function() {
-            alert("Dosya okunurken bir hata oluştu.");
-        };
-
-        reader.readAsText(fileInput);
-    }
-
-    function redirectToPayment() {
-        const payMacInput = document.getElementById('payMac').value;
-        if (!payMacInput) {
-            alert(langData[currentLang].alertValid);
-            return;
-        }
-        alert(langData[currentLang].alertPayProgress);
-    }
+    alert(langData[currentLang].alertPayProgress);
+}
 </script>
 </body>
 </html>
