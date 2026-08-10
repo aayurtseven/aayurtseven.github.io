@@ -74,8 +74,8 @@ input:focus { border-color: #f39c12; outline: none; }
 </div>
 
 <div class="card">
-<h3 id="section2Title">2. Ömür Boyu Lisans Aktif Et</h3>
-<p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;" id="txtPayDesc">7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.</p>
+<h3 id="section2Title">2. 1 Yıllık Lisans Aktif Et</h3>
+<p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;" id="txtPayDesc">7 günlük deneme süreniz dolduysa veya 1 yıllık (365 gün) kullanmak istiyorsanız buradan ödeme yapın.</p>
 <div class="input-group">
 <label class="lblMac">MAC Adresi</label>
 <input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
@@ -93,27 +93,11 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// --- YENİ: URL parametrelerinden mac ve uid oku ---
-// Uygulama "Kanal Yükle" butonuna bastığında linke bu parametreleri ekliyor:
-// https://.../?mac=95:70:B2:26:1C:3F&uid=abc123
+// --- URL Parametrelerini Oku ---
 const urlParams = new URLSearchParams(window.location.search);
 const paramMac = urlParams.get('mac');
 const paramUid = urlParams.get('uid');
-    // URL'den email parametresini al
 const paramEmail = urlParams.get('email');
-
-// updateAccountBadge fonksiyonunu şu şekilde güncelle:
-function updateAccountBadge() {
-    const badge = document.getElementById('accountBadge');
-    if (paramUid) {
-        badge.style.display = 'block';
-        // E-posta varsa onu göster, yoksa sadece UID'yi göster
-        const displayText = paramEmail ? paramEmail : paramUid;
-        badge.innerText = langData[currentLang].accountBadge + displayText;
-    } else {
-        badge.style.display = 'none';
-    }
-}
 
 // Dil Paketleri Sözlüğü
 const langData = {
@@ -129,8 +113,8 @@ const langData = {
         lblM3uFile: "M3U / M3U8 Dosyası Seç (Yöntem B)",
         instructions: "<strong>Nasıl Yapılır?</strong><br>1. Cihazınızdaki <strong>.m3u</strong> veya <strong>.m3u8</strong> dosyanızı seçin.<br>2. \"Dosyayı Yükle ve Gönder\" butonuna basın.",
         btnSendFile: "Dosyayı Yükle ve Gönder",
-        section2Title: "2. Ömür Boyu Lisans Aktif Et",
-        txtPayDesc: "7 günlük deneme süreniz dolduysa veya sınırsız kullanmak istiyorsanız buradan ödeme yapın.",
+        section2Title: "2. 1 Yıllık Lisans Aktif Et",
+        txtPayDesc: "7 günlük deneme süreniz dolduysa veya 1 yıllık (365 gün) kullanmak istiyorsanız buradan ödeme yapın.",
         btnPay: "Ödeme Yap ve Aktif Et",
         alertValid: "Lütfen geçerli bir MAC Adresi ve bir dosya seçin.",
         alertSuccessUrl: "M3U linkiniz başarıyla kaydedildi!",
@@ -150,8 +134,8 @@ const langData = {
         lblM3uFile: "Select M3U / M3U8 File (Method B)",
         instructions: "<strong>How to do?</strong><br>1. Select your <strong>.m3u</strong> or <strong>.m3u8</strong> file on your device.<br>2. Press the \"Upload and Send File\" button.",
         btnSendFile: "Upload and Send File",
-        section2Title: "2. Activate Lifetime License",
-        txtPayDesc: "If your 7-day trial has expired or you want unlimited access, make your payment here.",
+        section2Title: "2. Activate 1-Year License",
+        txtPayDesc: "If your 7-day trial has expired or you want 1-year (365 days) access, make your payment here.",
         btnPay: "Pay and Activate Now",
         alertValid: "Please enter a valid MAC Address and select a file.",
         alertSuccessUrl: "Your M3U link has been saved successfully!",
@@ -190,13 +174,15 @@ function updateAccountBadge() {
     const badge = document.getElementById('accountBadge');
     if (paramUid) {
         badge.style.display = 'block';
-        badge.innerText = langData[currentLang].accountBadge + paramUid;
+        // Öncelikli olarak Email'i, yoksa UID'yi göster
+        const identity = paramEmail ? paramEmail : paramUid;
+        badge.innerText = langData[currentLang].accountBadge + identity;
     } else {
         badge.style.display = 'none';
     }
 }
 
-// --- YENİ: Sayfa açılırken mac/uid alanlarını otomatik doldur ---
+// Sayfa açılırken mac/uid alanlarını otomatik doldur
 window.addEventListener('DOMContentLoaded', () => {
     if (paramMac) {
         const macFields = [document.getElementById('m3uMac'), document.getElementById('payMac')];
@@ -214,9 +200,7 @@ function sanitizeMac(mac) {
     return mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
 }
 
-// --- YENİ: Yazma hedefini belirleyen ortak fonksiyon ---
-// uid varsa -> playlists/{mac}/{uid}  (kullanıcıya özel, izole)
-// uid yoksa -> playlists/{mac}        (eski/guest davranışı, geriye dönük uyumluluk)
+// Yazma hedefini belirleyen ortak fonksiyon
 function getTargetRef(cleanMac) {
     if (paramUid) {
         return database.ref('playlists/' + cleanMac + '/' + paramUid);
