@@ -97,7 +97,7 @@ body {
     100% { transform: translateX(-50%); }
 }
 
-/* --- YÖNETİM PANELİ (GECE / MOR / MAVİ KONSEPTİNE UYARLANDI) --- */
+/* --- YÖNETİM PANELİ (GECE / MOR / MAVİ KONSEPTİ) --- */
 .lang-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 10; }
 .lang-btn { background: rgba(30, 20, 50, 0.8); color: #fff; border: 1px solid #5a3d80; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s; }
 .lang-btn.active { background: #4cc9f0; color: #190033; border-color: #4cc9f0; box-shadow: 0 0 10px rgba(76, 201, 240, 0.5); }
@@ -113,4 +113,14 @@ h2 { color: #4cc9f0; margin-top: 0; margin-bottom: 5px; text-shadow: 0 0 10px rg
 .input-group { margin-bottom: 15px; }
 label { display: block; margin-bottom: 6px; color: #d0cce1; font-size: 13px; }
 
-.instructions { background: rgba(18, 10, 32, 0.9); padding: 10px; border-radius: 6px; font-size: 12px; color: #4cc9f0; margin-bottom: 12px; border-left: 3px solid #7
+.instructions { background: rgba(18, 10, 32, 0.9); padding: 10px; border-radius: 6px; font-size: 12px; color: #4cc9f0; margin-bottom: 12px; border-left: 3px solid #7209b7; line-height: 1.4; }
+.account-badge { background: rgba(18, 10, 32, 0.9); padding: 8px 10px; border-radius: 6px; font-size: 12px; color: #4cc9f0; margin-bottom: 12px; border-left: 3px solid #4361ee; line-height: 1.4; word-break: break-all; }
+
+input[type="text"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #5a3d80; border-radius: 6px; background-color: rgba(18, 10, 32, 0.8); color: #fff; box-sizing: border-box; font-size: 14px; }
+input[type="text"] { text-align: center; }
+input[type="text"]:read-only { color: #887aab; background-color: rgba(12, 6, 22, 0.9); cursor: not-allowed; border-color: #3b2857; }
+input[type="file"] { cursor: pointer; padding: 8px; }
+input:focus { border-color: #4cc9f0; outline: none; box-shadow: 0 0 8px rgba(76, 201, 240, 0.4); }
+
+.btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 5px; }
+.btn-orange { background-color: #7209b7; color: #ffffff; box-shadow: 0 4px 15px rgba(114
