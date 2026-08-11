@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="siteTitle">ZZIptv - Yönetim ve Aktivasyon Merkezi</title>
+<title id="siteTitle">ZZ XTREAM - Yönetim ve Aktivasyon Merkezi</title>
 <style>
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; position: relative; }
 .lang-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
@@ -29,11 +29,16 @@ input:focus { border-color: #f39c12; outline: none; }
 .btn-blue { background-color: #2980b9; color: #fff; }
 .btn-blue:hover { background-color: #3498db; }
 .divider { text-align: center; margin: 15px 0; font-size: 12px; color: #777; text-transform: uppercase; font-weight: bold; }
+#loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; display: none; }
 </style>
+<!-- Firebase SDK'ları -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
+
+<div id="loadingOverlay"><div style="color: #f39c12; font-weight: bold;">Güvenli Bağlantı Kuruluyor...</div></div>
 
 <div class="lang-switcher">
 <button class="lang-btn active" id="btnLangTR" onclick="setLanguage('tr')">TR</button>
@@ -41,14 +46,12 @@ input:focus { border-color: #f39c12; outline: none; }
 </div>
 
 <div class="container">
-<h2 id="mainTitle">ZZIptv Kontrol Paneli</h2>
+<h2 id="mainTitle">ZZ XTREAM Kontrol Paneli</h2>
 <div class="subtitle" id="mainSubtitle">MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.</div>
 
 <div class="card">
 <h3 id="section1Title">1. Kanal Listesi (M3U) Yükle</h3>
-
 <div id="accountBadge" class="account-badge" style="display:none;"></div>
-
 <div class="input-group">
 <label class="lblMac">MAC Adresi</label>
 <input type="text" id="m3uMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
@@ -58,16 +61,10 @@ input:focus { border-color: #f39c12; outline: none; }
 <input type="text" id="m3uUrl" placeholder="https://domain.com?...">
 </div>
 <button class="btn btn-blue" id="btnSendUrl" onclick="uploadPlaylistUrl()">M3U Linki Gönder</button>
-
 <div class="divider" id="txtOr">Veya</div>
-
 <div class="input-group">
 <label id="lblM3uFile">M3U / M3U8 Dosyası Seç (Yöntem B)</label>
-<div class="instructions" id="txtInstructions">
-<strong>Nasıl Yapılır?</strong><br>
-1. Cihazınızdaki <strong>.m3u</strong> veya <strong>.m3u8</strong> dosyanızı seçin.<br>
-2. "Dosyayı Yükle ve Gönder" butonuna basın.
-</div>
+<div class="instructions" id="txtInstructions"></div>
 <input type="file" id="m3uFileInput" accept=".m3u, .m3u8">
 </div>
 <button class="btn btn-orange" id="btnSendFile" onclick="uploadPlaylistFile()">Dosyayı Yükle ve Gönder</button>
@@ -75,35 +72,45 @@ input:focus { border-color: #f39c12; outline: none; }
 
 <div class="card">
 <h3 id="section2Title">2. 1 Yıllık Lisans Aktif Et</h3>
-<p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;" id="txtPayDesc">7 günlük deneme süreniz dolduysa veya 1 yıllık (365 gün) kullanmak istiyorsanız buradan ödeme yapın.</p>
+<p style="font-size: 13px; color: #aaa; margin: 0 0 15px 0;" id="txtPayDesc"></p>
 <div class="input-group">
 <label class="lblMac">MAC Adresi</label>
 <input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
 </div>
 <button class="btn btn-orange" id="btnPay" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
 </div>
-
 </div>
 
 <script>
-const FIREBASE_DB_URL = "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app";
+// --- KONFİGÜRASYON ---
 const firebaseConfig = {
-    databaseURL: FIREBASE_DB_URL
+    apiKey: "AIzaSyAZq37V4NtdHdjiN5GUk43omDSxz7toW10",
+    databaseURL: "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "zziptv-player-control"
 };
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
+const auth = firebase.auth();
 
-// --- URL Parametrelerini Oku ---
+// URL Parametreleri
 const urlParams = new URLSearchParams(window.location.search);
 const paramMac = urlParams.get('mac');
 const paramUid = urlParams.get('uid');
 const paramEmail = urlParams.get('email');
 
-// Dil Paketleri Sözlüğü
+// Güvenli Giriş Başlat
+document.getElementById('loadingOverlay').style.display = 'flex';
+auth.signInAnonymously().then(() => {
+    document.getElementById('loadingOverlay').style.display = 'none';
+    console.log("Güvenli bağlantı başarılı.");
+}).catch((error) => {
+    alert("Güvenlik Hatası: Firebase Authentication devre dışı olabilir. Lütfen geliştiriciye bildirin.");
+});
+
 const langData = {
     tr: {
-        title: "ZZIptv - Yönetim ve Aktivasyon Merkezi",
-        mainTitle: "ZZIptv Kontrol Paneli",
+        title: "ZZ XTREAM - Yönetim ve Aktivasyon Merkezi",
+        mainTitle: "ZZ XTREAM Kontrol Paneli",
         mainSubtitle: "MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.",
         section1Title: "1. Kanal Listesi (M3U) Yükle",
         lblMac: "MAC Adresi",
@@ -117,14 +124,13 @@ const langData = {
         txtPayDesc: "7 günlük deneme süreniz dolduysa veya 1 yıllık (365 gün) kullanmak istiyorsanız buradan ödeme yapın.",
         btnPay: "Ödeme Yap ve Aktif Et",
         alertValid: "Lütfen geçerli bir MAC Adresi ve bir dosya seçin.",
-        alertSuccessUrl: "M3U linkiniz başarıyla kaydedildi!",
-        alertSuccessFile: "M3U/M3U8 dosya içeriğiniz başarıyla yüklendi!",
+        alertSuccess: "M3U içeriğiniz başarıyla yüklendi!",
         alertPayProgress: "Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin.",
-        accountBadge: "Bağlı hesap kimliği: "
+        accountBadge: "Bağlı hesap: "
     },
     en: {
-        title: "ZZIptv - Management & Activation Center",
-        mainTitle: "ZZIptv Control Panel",
+        title: "ZZ XTREAM - Management & Activation Center",
+        mainTitle: "ZZ XTREAM Control Panel",
         mainSubtitle: "Upload playlists or activate your device via your MAC address.",
         section1Title: "1. Upload Channel List (M3U)",
         lblMac: "MAC Address",
@@ -138,10 +144,9 @@ const langData = {
         txtPayDesc: "If your 7-day trial has expired or you want 1-year (365 days) access, make your payment here.",
         btnPay: "Pay and Activate Now",
         alertValid: "Please enter a valid MAC Address and select a file.",
-        alertSuccessUrl: "Your M3U link has been saved successfully!",
-        alertSuccessFile: "Your M3U/M3U8 file content has been uploaded successfully!",
+        alertSuccess: "Your M3U content has been uploaded successfully!",
         alertPayProgress: "Payment system is under iyzico approval. Please try again later.",
-        accountBadge: "Connected account ID: "
+        accountBadge: "Connected account: "
     }
 };
 
@@ -164,9 +169,7 @@ function setLanguage(lang) {
     document.getElementById('section2Title').innerText = langData[lang].section2Title;
     document.getElementById('txtPayDesc').innerText = langData[lang].txtPayDesc;
     document.getElementById('btnPay').innerText = langData[lang].btnPay;
-    document.querySelectorAll('.lblMac').forEach(el => {
-        el.innerText = langData[lang].lblMac;
-    });
+    document.querySelectorAll('.lblMac').forEach(el => el.innerText = langData[lang].lblMac);
     updateAccountBadge();
 }
 
@@ -174,100 +177,66 @@ function updateAccountBadge() {
     const badge = document.getElementById('accountBadge');
     if (paramUid) {
         badge.style.display = 'block';
-        // Öncelikli olarak Email'i, yoksa UID'yi göster
-        const identity = paramEmail ? paramEmail : paramUid;
-        badge.innerText = langData[currentLang].accountBadge + identity;
+        badge.innerText = langData[currentLang].accountBadge + (paramEmail ? paramEmail : paramUid);
     } else {
         badge.style.display = 'none';
     }
 }
 
-// Sayfa açılırken mac/uid alanlarını otomatik doldur
 window.addEventListener('DOMContentLoaded', () => {
     if (paramMac) {
-        const macFields = [document.getElementById('m3uMac'), document.getElementById('payMac')];
-        macFields.forEach(field => {
-            if (field) {
-                field.value = paramMac;
-                field.readOnly = true;
-            }
+        ['m3uMac', 'payMac'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.value = paramMac; el.readOnly = true; }
         });
     }
-    updateAccountBadge();
+    setLanguage('tr');
 });
 
-function sanitizeMac(mac) {
-    return mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
-}
+function sanitizeMac(mac) { return mac.trim().replace(/[:\-\s]/g, "").toLowerCase(); }
 
-// Yazma hedefini belirleyen ortak fonksiyon
 function getTargetRef(cleanMac) {
-    if (paramUid) {
-        return database.ref('playlists/' + cleanMac + '/' + paramUid);
-    }
+    // Kurallara uyumlu hedef belirleme
+    if (paramUid) return database.ref('playlists/' + cleanMac + '/' + paramUid);
     return database.ref('playlists/' + cleanMac);
 }
 
-// Yöntem A: URL ile Kaydetme
 function uploadPlaylistUrl() {
-    const macInput = document.getElementById('m3uMac').value;
-    const urlInput = document.getElementById('m3uUrl').value;
-
-    if (!macInput || !urlInput) {
-        alert(langData[currentLang].alertValid);
-        return;
-    }
-
-    const cleanMac = sanitizeMac(macInput);
-    getTargetRef(cleanMac).set({
+    const mac = document.getElementById('m3uMac').value;
+    const url = document.getElementById('m3uUrl').value;
+    if (!mac || !url) return alert(langData[currentLang].alertValid);
+    
+    getTargetRef(sanitizeMac(mac)).set({
         type: 'url',
-        content: urlInput.trim(),
+        content: url.trim(),
         updatedAt: Date.now()
     }).then(() => {
-        alert(langData[currentLang].alertSuccessUrl);
+        alert(langData[currentLang].alertSuccess);
         document.getElementById('m3uUrl').value = '';
-    }).catch((error) => {
-        alert("Hata: " + error.message);
-    });
+    }).catch(e => alert("Yetki Hatası: " + e.message));
 }
 
-// Yöntem B: Dosya Seçerek Okuma ve Kaydetme
 function uploadPlaylistFile() {
-    const macInput = document.getElementById('m3uMac').value;
-    const fileInput = document.getElementById('m3uFileInput').files[0];
-
-    if (!macInput || !fileInput) {
-        alert(langData[currentLang].alertValid);
-        return;
-    }
+    const mac = document.getElementById('m3uMac').value;
+    const file = document.getElementById('m3uFileInput').files[0];
+    if (!mac || !file) return alert(langData[currentLang].alertValid);
 
     const reader = new FileReader();
-    reader.onload = function(e) {
-        const fileContent = e.target.result;
-        const cleanMac = sanitizeMac(macInput);
-        getTargetRef(cleanMac).set({
+    reader.onload = (e) => {
+        getTargetRef(sanitizeMac(mac)).set({
             type: 'text',
-            content: fileContent.trim(),
+            content: e.target.result.trim(),
             updatedAt: Date.now()
         }).then(() => {
-            alert(langData[currentLang].alertSuccessFile);
+            alert(langData[currentLang].alertSuccess);
             document.getElementById('m3uFileInput').value = '';
-        }).catch((error) => {
-            alert("Hata: " + error.message);
-        });
+        }).catch(e => alert("Yetki Hatası: " + e.message));
     };
-    reader.onerror = function() {
-        alert("Dosya okunurken bir hata oluştu.");
-    };
-    reader.readAsText(fileInput);
+    reader.readAsText(file);
 }
 
 function redirectToPayment() {
-    const payMacInput = document.getElementById('payMac').value;
-    if (!payMacInput) {
-        alert(langData[currentLang].alertValid);
-        return;
-    }
+    if (!document.getElementById('payMac').value) return alert(langData[currentLang].alertValid);
     alert(langData[currentLang].alertPayProgress);
 }
 </script>
