@@ -8,147 +8,146 @@
 :root { --primary: #2196F3; --secondary: #9C27B0; --dark-bg: #0d041a; --surface: rgba(30, 41, 59, 0.85); }
 body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--dark-bg); color: #ffffff; margin: 0; padding: 0; overflow-x: hidden; }
 
-/* ARKA PLAN */
-.wave-container { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(to bottom, #0d041a, #1a0b3d); }
+/* --- ARKA PLAN VE PARILTI --- */
+.wave-container { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(to bottom, #0d041a, #1a0b3d); overflow: hidden; }
 .wave { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,30 C150,110 350,0 600,30 C850,60 1050,110 1200,30 L1200,120 L0,120 Z" fill="rgba(156, 39, 176, 0.05)"/></svg>'); background-repeat: repeat-x; background-size: 50% 120px; animation: wave-move 20s linear infinite; }
 @keyframes wave-move { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.sparkle { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: sparkle-fade 4s infinite; pointer-events: none; }
+@keyframes sparkle-fade { 0%, 100% { opacity: 0; transform: scale(0); } 50% { opacity: 0.3; transform: scale(1.2); } }
 
-/* ANA YAPI */
-.main-wrapper { 
-    display: flex; 
-    width: 100%; 
-    min-height: 100vh; 
-    box-sizing: border-box; 
-    z-index: 10; 
-    position: relative;
-}
+/* --- ANA YAPI --- */
+.main-wrapper { display: flex; width: 100%; min-height: 100vh; z-index: 10; position: relative; }
 
-/* SOL TARAF: KLAVUZ */
-.info-section { 
-    flex: 1.4; 
-    padding: 60px; 
-    background: rgba(0, 0, 0, 0.4); 
-    backdrop-filter: blur(15px); 
-    box-sizing: border-box;
-}
+/* SOL TARAF: PROFESYONEL TANITIM */
+.info-section { flex: 1.4; padding: 60px; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(25px); box-sizing: border-box; }
+.info-section h2 { color: var(--primary); font-size: 52px; margin-bottom: 10px; font-weight: 900; letter-spacing: -1.5px; text-shadow: 0 0 30px rgba(33, 150, 243, 0.4); }
+.info-section h3 { color: #f1c40f; font-size: 26px; margin-top: 40px; border-bottom: 2px solid rgba(241, 196, 15, 0.2); padding-bottom: 10px; font-weight: 800; letter-spacing: 1px; }
+.info-section p { font-size: 21px; color: #eee; line-height: 1.8; font-weight: 300; }
+.info-section b { color: var(--primary); font-weight: 800; }
 
-/* DİKEY NEON FLORESAN BÖLÜCÜ */
-.vertical-neon {
-    width: 4px;
-    height: 100vh;
-    background: linear-gradient(to bottom, transparent, var(--primary), var(--secondary), var(--primary), transparent);
-    box-shadow: 0 0 20px var(--primary), 0 0 40px var(--secondary);
-    position: sticky;
-    top: 0;
-}
+.feature-list { padding: 0; margin: 30px 0; }
+.feature-list li { list-style: none; margin-bottom: 28px; font-size: 19px; display: flex; align-items: flex-start; line-height: 1.6; }
+.feature-list li::before { content: "✔"; margin-right: 18px; font-size: 22px; color: #4CAF50; font-weight: bold; }
+
+/* DİKEY NEON BÖLÜCÜ */
+.vertical-neon { width: 5px; height: 100vh; background: linear-gradient(to bottom, transparent, var(--primary), var(--secondary), var(--primary), transparent); box-shadow: 0 0 25px var(--primary), 0 0 50px var(--secondary); position: sticky; top: 0; z-index: 20; }
 
 /* SAĞ TARAF: PANEL */
-.panel-section { 
-    flex: 1; 
-    background: var(--surface); 
-    padding: 60px 40px; 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+.panel-section { flex: 1; background: var(--surface); padding: 60px 45px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; box-shadow: -20px 0 60px rgba(0,0,0,0.5); }
+.panel-title { font-weight: 900; font-size: 32px; letter-spacing: 3px; text-shadow: 0 0 15px var(--primary); color: #fff; }
 
-/* YAZI VE BİLEŞENLER */
-.info-section h2 { color: var(--primary); font-size: 46px; margin-bottom: 20px; font-weight: 900; letter-spacing: -1px; }
-.info-section h3 { color: #f1c40f; font-size: 24px; margin-top: 40px; border-bottom: 2px solid rgba(241, 196, 15, 0.3); padding-bottom: 10px; font-weight: 800; }
-.info-section p { font-size: 19px; color: #eee; line-height: 1.8; }
-.feature-list { padding: 0; margin: 25px 0; }
-.feature-list li { list-style: none; margin-bottom: 22px; font-size: 18px; display: flex; align-items: flex-start; }
-.feature-list li::before { content: "🚀"; margin-right: 15px; font-size: 22px; }
-
-.card { background: rgba(15, 23, 42, 0.6); padding: 30px; border-radius: 28px; margin-bottom: 30px; text-align: left; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 450px; box-sizing: border-box; }
+.card { background: rgba(15, 23, 42, 0.7); padding: 35px; border-radius: 32px; margin-bottom: 40px; text-align: left; border: 1px solid rgba(255,255,255,0.12); width: 100%; max-width: 480px; box-sizing: border-box; transition: 0.3s; }
+.card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
 /* 3D BUTONLAR */
-.cube-btn { position: relative; width: 100%; height: 68px; border: none; background: transparent; cursor: pointer; margin-top: 15px; outline: none; text-decoration: none; display: block; }
-.cube-btn .btn-side { position: absolute; top: 6px; left: 0; width: 100%; height: 100%; border-radius: 20px; z-index: 1; }
-.cube-btn .btn-top { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 20px; color: white; font-weight: 900; font-size: 18px; transition: all 0.1s; z-index: 2; border: 1px solid rgba(255,255,255,0.3); text-transform: uppercase; }
-.cube-btn:active .btn-top { transform: translateY(5px); }
+.cube-btn { position: relative; width: 100%; height: 74px; border: none; background: transparent; cursor: pointer; margin-top: 15px; outline: none; text-decoration: none; display: block; }
+.cube-btn .btn-side { position: absolute; top: 7px; left: 0; width: 100%; height: 100%; border-radius: 22px; z-index: 1; }
+.cube-btn .btn-top { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 22px; color: white; font-weight: 900; font-size: 20px; transition: all 0.1s; z-index: 2; border: 1px solid rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; }
+.cube-btn:active .btn-top { transform: translateY(6px); }
 
 .btn-blue .btn-top { background: linear-gradient(180deg, #42a5f5, #2196f3); } .btn-blue .btn-side { background: #0d47a1; }
 .btn-purple .btn-top { background: linear-gradient(180deg, #ab47bc, #9c27b0); } .btn-purple .btn-side { background: #4a148c; }
 .btn-green .btn-top { background: linear-gradient(180deg, #66bb6a, #43a047); } .btn-green .btn-side { background: #1b5e20; }
 
-input[type="text"], input[type="file"] { width: 100%; padding: 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 18px; background: rgba(0,0,0,0.6); color: #fff; box-sizing: border-box; font-size: 17px; outline: none; }
+input[type="text"], input[type="file"] { width: 100%; padding: 22px; border: 1px solid rgba(255,255,255,0.25); border-radius: 22px; background: rgba(0,0,0,0.65); color: #fff; box-sizing: border-box; font-size: 19px; outline: none; transition: 0.3s; }
+input:focus { border-color: var(--primary); background: rgba(0,0,0,0.9); box-shadow: 0 0 20px rgba(33, 150, 243, 0.2); }
 
 #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
 
-@media (max-width: 1000px) { 
-    .main-wrapper { flex-direction: column; } 
-    .vertical-neon { width: 100%; height: 4px; position: relative; }
-    .info-section, .panel-section { width: 100%; padding: 40px 20px; }
-}
+@media (max-width: 1100px) { .main-wrapper { flex-direction: column; } .vertical-neon { width: 100%; height: 6px; position: relative; } .info-section, .panel-section { width: 100%; padding: 50px 30px; } }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
-<div class="wave-container"><div class="wave"></div></div>
+
+<div class="wave-container" id="waveContainer"><div class="wave"></div><div class="wave" style="bottom:10px; opacity:0.5;"></div></div>
+
 <div id="loadingOverlay">
-    <div style="color: #fff; font-weight: bold; font-size: 28px; margin-bottom: 10px; letter-spacing: 3px;">ZZ XTREAM</div>
-    <div id="statusText" style="color: var(--primary); font-size: 18px; font-weight: bold;">SİSTEM YÜKLENİYOR...</div>
+    <div style="color: #fff; font-weight: bold; font-size: 32px; margin-bottom: 10px; letter-spacing: 5px;">ZZ XTREAM</div>
+    <div style="color: var(--primary); font-size: 18px; font-weight: bold;">PREMIUM DENEYİM YÜKLENİYOR...</div>
 </div>
 
 <div class="main-wrapper">
-    <!-- SOL TARAF -->
+    <!-- SOL TARAF: VİZYON VE PRO SÜREÇ -->
     <div class="info-section">
         <h2>ZZ XTREAM PLAYER</h2>
-        <p>Geleceğin medya oynatıcısı ile tanışın. Modern mimari, ultra hız ve sarsılmaz güvenlik tek bir çatı altında toplandı.</p>
+        <div style="width: 180px; height: 6px; background: var(--primary); border-radius: 10px; margin-bottom: 35px; box-shadow: 0 0 15px var(--primary);"></div>
         
-        <h3>💎 NEDEN ZZ XTREAM?</h3>
+        <p>ZZ XTREAM PLAYER, sıradan bir oynatıcı değil; hız, estetik ve güvenliğin buluştuğu <b>Premium bir medya ekosistemidir.</b></p>
+        
+        <h3>🎁 7 GÜNLÜK ÜCRETSİZ DENEME</h3>
         <ul class="feature-list">
-            <li><strong>3D Küp Arayüz:</strong> Sıradan listelerden kurtulun. Uygulamanın her köşesinde derinlik hissini ve premium kaliteyi yaşayın.</li>
-            <li><strong>Maksimum Akıcılık:</strong> 1000 Mbit internete bile taş çıkartan donanım hızlandırmalı video motoru ile 4K içeriklerde sıfır donma.</li>
-            <li><strong>Kişisel Güvenlik:</strong> Dünyada ilk defa uygulanan "Zero-Trust" veri izolasyonu sayesinde listeniz sadece size ve profilinize özeldir.</li>
-            <li><strong>Hassas Kontroller:</strong> Sadece 3 saniye basılı tutarak favorilerinizi yönetin, akıllı arama ile saniyeler içinde içeriğinize ulaşın.</li>
+            <li>Uygulamayı indirdiğiniz an <b>7 günlük Full Deneme süreniz</b> otomatik olarak başlar.</li>
+            <li>Bu süre boyunca tüm "Pro" özellikleri sınırsızca test edebilir, 4K akıcılığını ve 3D arayüzü deneyimleyebilirsiniz.</li>
+            <li>ZZ XTREAM Lite sürümüyle bile kalitemizi görmeniz için size kapılarımızı sonuna kadar açıyoruz.</li>
         </ul>
 
-        <h3>🛠️ NASIL KULLANILIR?</h3>
+        <h3>🌟 PRO SÜRÜME GEÇİŞ & GOOGLE GÜVENCESİ</h3>
         <ul class="feature-list">
-            <li><strong>Adım 1:</strong> Uygulamayı açın ve size özel oluşturulan Cihaz Kimliğini (MAC) not edin.</li>
-            <li><strong>Adım 2:</strong> Sağdaki paneli kullanarak MAC adresinizi girin ve M3U linkinizi veya dosyanızı sisteme gönderin.</li>
-            <li><strong>Adım 3:</strong> Değişiklikler uygulamanıza anında yansıyacaktır. Keyfini çıkarın!</li>
+            <li><b>Kesintisiz Deneyim:</b> Deneme süreniz dolduğunda, uygulama içinden tek tıkla <b>1 Yıllık Tam Erişim</b> paketini satın alabilirsiniz.</li>
+            <li><b>Google Play Güvencesi:</b> Tüm ödeme işlemleri %100 <b>Google Play altyapısı</b> üzerinden gerçekleşir. Kart bilgileriniz asla sunucularımıza dokunmaz.</li>
+            <li><b>Kısıtlamasız Özgürlük:</b> Pro sürüme geçtiğinizde "Lite" ibaresi kalkar ve 365 gün boyunca en güncel özelliklere, en hızlı sunuculara kesintisiz sahip olursunuz.</li>
+        </ul>
+
+        <h3>💎 NEDEN BİZİ SEÇMELİSİNİZ?</h3>
+        <ul class="feature-list">
+            <li>Dünya standartlarında <b>Zero-Trust (Sıfır Güven)</b> veri izolasyonu.</li>
+            <li>Göz yormayan, derinlikli <b>3D Küp Tasarımı.</b></li>
+            <li><b>Akıllı Bellek Yönetimi</b> ile takılmayan, donmayan video motoru.</li>
         </ul>
     </div>
 
     <!-- DİKEY NEON BÖLÜCÜ -->
     <div class="vertical-neon"></div>
 
-    <!-- SAĞ TARAF -->
+    <!-- SAĞ TARAF: KONTROL MERKEZİ -->
     <div class="panel-section">
-        <div style="font-weight: 900; font-size: 28px; letter-spacing: 3px;">KONTROL MERKEZİ</div>
-        <div style="width: 100px; height: 4px; background: var(--primary); margin: 20px 0 40px; border-radius: 10px; box-shadow: 0 0 15px var(--primary);"></div>
+        <div class="panel-title">KONTROL MERKEZİ</div>
+        <div style="width: 100px; height: 5px; background: var(--secondary); margin: 25px 0 45px; border-radius: 10px;"></div>
 
-        <div class="card" style="border-top: 4px solid #43a047;">
-            <h3 style="margin-top:0; color:#66bb6a; font-weight: 800;">UYGULAMA İNDİRME</h3>
-            <p style="font-size: 15px; color: #ccc; margin-bottom: 20px;">En güncel sürümü edinmek için aşağıdaki butona tıklayın.</p>
+        <div class="card" style="border-top: 5px solid #43a047;">
+            <h3 style="margin-top:0; color:#66bb6a; font-weight: 800;">HEMEN İNDİRİN</h3>
+            <p style="font-size: 17px; color: #ccc; margin-bottom: 25px;">Premium dünyaya adım atmak için uygulamayı edinin.</p>
             <a href="#" target="_blank" class="cube-btn btn-green">
                 <span class="btn-side"></span><span class="btn-top">GOOGLE PLAY STORE</span>
             </a>
         </div>
 
         <div class="card">
-            <div id="accountBadge" style="background:rgba(33,150,243,0.15); padding:15px; border-radius:18px; font-size:15px; margin-bottom:20px; display:none; color:#90caf9; font-weight: bold; text-align: center;"></div>
-            <h3 style="margin-top:0; color:var(--primary); font-weight: 800;">KANAL LİSTESİ YÜKLE</h3>
-            <input type="text" id="m3uMac" placeholder="MAC ADRESİNİZ" style="margin-bottom: 20px;">
-            <input type="text" id="m3uUrl" placeholder="M3U PLUS URL (LİNK)" style="margin-bottom: 15px;">
+            <div id="accountBadge" style="background:rgba(33,150,243,0.18); padding:20px; border-radius:25px; font-size:17px; margin-bottom:30px; display:none; color:#90caf9; font-weight: 800; text-align: center; border: 1px solid rgba(33, 150, 243, 0.4);"></div>
+            <h3 style="margin-top:0; color:var(--primary); font-weight: 800;">KANAL LİSTESİ YÜKLE (M3U)</h3>
+            <input type="text" id="m3uMac" placeholder="MAC ADRESİNİZ">
+            <div style="height: 15px;"></div>
+            <input type="text" id="m3uUrl" placeholder="M3U PLUS URL (LİNK)">
             <button class="cube-btn btn-blue" onclick="uploadPlaylistUrl()"><span class="btn-side"></span><span class="btn-top">LİNKİ SİSTEME GÖNDER</span></button>
-            
-            <div style="text-align:center; margin: 35px 0; font-size: 15px; color: rgba(255,255,255,0.2); font-weight: 900; letter-spacing: 2px;">VEYA</div>
-            
-            <input type="file" id="m3uFileInput" accept=".m3u, .m3u8" style="margin-bottom: 15px;">
+            <div style="text-align:center; margin: 40px 0; font-size: 17px; color: rgba(255,255,255,0.2); font-weight: 900; letter-spacing: 3px;">VEYA</div>
+            <input type="file" id="m3uFileInput" accept=".m3u, .m3u8">
             <button class="cube-btn btn-purple" onclick="uploadPlaylistFile()"><span class="btn-side"></span><span class="btn-top">DOSYAYI SİSTEME YÜKLE</span></button>
         </div>
     </div>
 </div>
 
 <script>
-// FIREBASE AYARLARI
+// --- PARILDAMA (SPARKLE) MOTORU ---
+function createSparkles() {
+    const container = document.getElementById('waveContainer');
+    for(let i=0; i<60; i++) {
+        const s = document.createElement('div');
+        s.className = 'sparkle';
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        const size = (Math.random() * 5 + 2) + 'px';
+        s.style.width = s.style.height = size;
+        s.style.animationDelay = Math.random() * 5 + 's';
+        s.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        container.appendChild(s);
+    }
+}
+createSparkles();
+
+// --- FIREBASE BAĞLANTISI ---
 const part1 = "AIzaSyAZq37V4Ntd"; const part2 = "HdjiN5GUk43omDSxz7toW10";
 const firebaseConfig = { apiKey: part1 + part2, databaseURL: "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app", projectId: "zziptv-player-control" };
 firebase.initializeApp(firebaseConfig);
@@ -171,8 +170,7 @@ auth.signInAnonymously().then(() => {
     document.getElementById('loadingOverlay').style.display = 'none';
 }).catch(e => {
     console.error("Auth Hatası:", e);
-    document.getElementById('statusText').innerText = "BAĞLANTI HATASI!";
-    setTimeout(() => { document.getElementById('loadingOverlay').style.display = 'none'; }, 2000);
+    document.getElementById('loadingOverlay').style.display = 'none';
 });
 
 function sanitizeMac(mac) { return mac.trim().replace(/[:\-\s]/g, "").toLowerCase(); }
@@ -185,21 +183,21 @@ function getTargetRef(mac) {
 function uploadPlaylistUrl() {
     const mac = document.getElementById('m3uMac').value;
     const url = document.getElementById('m3uUrl').value;
-    if (!mac || !url) return alert("Lütfen eksik alanları doldurun.");
+    if (!mac || !url) return alert("Lütfen gerekli alanları doldurun.");
     getTargetRef(mac).set({ type: 'url', content: url.trim(), updatedAt: Date.now() })
-    .then(() => alert("Liste başarıyla sisteme gönderildi!"))
-    .catch(e => alert("Yetki Hatası: " + e.message));
+    .then(() => alert("Liste başarıyla sisteme gönderildi! Uygulamanız otomatik güncellenecektir."))
+    .catch(e => alert("Hata: " + e.message));
 }
 
 function uploadPlaylistFile() {
     const mac = document.getElementById('m3uMac').value;
     const file = document.getElementById('m3uFileInput').files[0];
-    if (!mac || !file) return alert("Lütfen MAC adresi ve dosya seçin.");
+    if (!mac || !file) return alert("Lütfen MAC adresi ve bir dosya seçin.");
     const reader = new FileReader();
     reader.onload = (e) => {
         getTargetRef(mac).set({ type: 'text', content: e.target.result.trim(), updatedAt: Date.now() })
-        .then(() => alert("Dosya başarıyla yüklendi!"))
-        .catch(e => alert("Yetki Hatası: " + e.message));
+        .then(() => alert("Dosya sisteme başarıyla yüklendi! Uygulamanız otomatik güncellenecektir."))
+        .catch(e => alert("Hata: " + e.message));
     };
     reader.readAsText(file);
 }
