@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="siteTitle">ZZ XTREAM - Gelişmiş Yönetim Merkezi</title>
+<title id="siteTitle">ZZ XTREAM - Yönetim ve İndirme Merkezi</title>
 <style>
 :root { --primary: #2196F3; --secondary: #9C27B0; --dark-bg: #0d041a; --surface: rgba(30, 41, 59, 0.85); }
-body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--dark-bg); color: #ffffff; margin: 0; overflow-x: hidden; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--dark-bg); color: #ffffff; margin: 0; padding: 0; overflow-x: hidden; }
 
 /* ARKA PLAN */
 .wave-container { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(to bottom, #0d041a, #1a0b3d); }
@@ -14,35 +14,74 @@ body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--dark
 @keyframes wave-move { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ANA YAPI */
-.main-wrapper { display: flex; width: 95%; max-width: 1200.dp; gap: 30px; padding: 40px; box-sizing: border-box; flex-wrap: wrap; z-index: 10; }
+.main-wrapper { 
+    display: flex; 
+    width: 100%; 
+    min-height: 100vh; 
+    box-sizing: border-box; 
+    z-index: 10; 
+    position: relative;
+}
 
-/* SOL TARAF: GÜNCELLEMELER VE KILAVUZ */
-.info-section { flex: 1.2; min-width: 350px; background: rgba(0, 0, 0, 0.3); padding: 30px; border-radius: 32px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-.info-section h2 { color: var(--primary); font-size: 28px; margin-bottom: 10px; font-weight: 900; }
-.info-section h3 { color: #f1c40f; font-size: 18px; margin-top: 25px; border-bottom: 1px solid rgba(241, 196, 15, 0.3); padding-bottom: 5px; }
-.info-section p { font-size: 14px; color: #ccc; line-height: 1.6; }
-.feature-list { padding: 0; margin: 15px 0; }
-.feature-list li { list-style: none; margin-bottom: 12px; font-size: 14px; display: flex; align-items: flex-start; }
-.feature-list li::before { content: "⚡"; margin-right: 12px; color: var(--primary); }
+/* SOL TARAF: KLAVUZ */
+.info-section { 
+    flex: 1.4; 
+    padding: 60px; 
+    background: rgba(0, 0, 0, 0.4); 
+    backdrop-filter: blur(15px); 
+    box-sizing: border-box;
+}
 
-/* SAĞ TARAF: YÜKLEME PANELİ */
-.panel-section { flex: 1; min-width: 350px; background: var(--surface); padding: 35px; border-radius: 32px; box-shadow: 0 25px 60px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.12); text-align: center; }
+/* DİKEY NEON FLORESAN BÖLÜCÜ */
+.vertical-neon {
+    width: 4px;
+    height: 100vh;
+    background: linear-gradient(to bottom, transparent, var(--primary), var(--secondary), var(--primary), transparent);
+    box-shadow: 0 0 20px var(--primary), 0 0 40px var(--secondary);
+    position: sticky;
+    top: 0;
+}
 
-/* ORTAK BİLEŞENLER */
-.neon-line { width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent); margin: 15px 0 25px; border-radius: 10px; }
-.card { background: rgba(15, 23, 42, 0.5); padding: 22px; border-radius: 22px; margin-bottom: 20px; text-align: left; border: 1px solid rgba(255,255,255,0.08); }
-.cube-btn { position: relative; width: 100%; height: 52px; border: none; background: transparent; cursor: pointer; margin-top: 12px; outline: none; text-decoration: none; display: block; }
-.cube-btn .btn-side { position: absolute; top: 5px; left: 0; width: 100%; height: 100%; border-radius: 15px; z-index: 1; }
-.cube-btn .btn-top { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 15px; color: white; font-weight: 900; font-size: 14px; transition: all 0.1s; z-index: 2; border: 1px solid rgba(255,255,255,0.25); text-transform: uppercase; }
-.cube-btn:active .btn-top { transform: translateY(4px); }
+/* SAĞ TARAF: PANEL */
+.panel-section { 
+    flex: 1; 
+    background: var(--surface); 
+    padding: 60px 40px; 
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* YAZI VE BİLEŞENLER */
+.info-section h2 { color: var(--primary); font-size: 46px; margin-bottom: 20px; font-weight: 900; letter-spacing: -1px; }
+.info-section h3 { color: #f1c40f; font-size: 24px; margin-top: 40px; border-bottom: 2px solid rgba(241, 196, 15, 0.3); padding-bottom: 10px; font-weight: 800; }
+.info-section p { font-size: 19px; color: #eee; line-height: 1.8; }
+.feature-list { padding: 0; margin: 25px 0; }
+.feature-list li { list-style: none; margin-bottom: 22px; font-size: 18px; display: flex; align-items: flex-start; }
+.feature-list li::before { content: "🚀"; margin-right: 15px; font-size: 22px; }
+
+.card { background: rgba(15, 23, 42, 0.6); padding: 30px; border-radius: 28px; margin-bottom: 30px; text-align: left; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 450px; box-sizing: border-box; }
+
+/* 3D BUTONLAR */
+.cube-btn { position: relative; width: 100%; height: 68px; border: none; background: transparent; cursor: pointer; margin-top: 15px; outline: none; text-decoration: none; display: block; }
+.cube-btn .btn-side { position: absolute; top: 6px; left: 0; width: 100%; height: 100%; border-radius: 20px; z-index: 1; }
+.cube-btn .btn-top { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 20px; color: white; font-weight: 900; font-size: 18px; transition: all 0.1s; z-index: 2; border: 1px solid rgba(255,255,255,0.3); text-transform: uppercase; }
+.cube-btn:active .btn-top { transform: translateY(5px); }
+
 .btn-blue .btn-top { background: linear-gradient(180deg, #42a5f5, #2196f3); } .btn-blue .btn-side { background: #0d47a1; }
 .btn-purple .btn-top { background: linear-gradient(180deg, #ab47bc, #9c27b0); } .btn-purple .btn-side { background: #4a148c; }
 .btn-green .btn-top { background: linear-gradient(180deg, #66bb6a, #43a047); } .btn-green .btn-side { background: #1b5e20; }
-input[type="text"], input[type="file"] { width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; background: rgba(0,0,0,0.5); color: #fff; box-sizing: border-box; font-size: 14px; outline: none; }
+
+input[type="text"], input[type="file"] { width: 100%; padding: 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 18px; background: rgba(0,0,0,0.6); color: #fff; box-sizing: border-box; font-size: 17px; outline: none; }
 
 #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
 
-@media (max-width: 850px) { .main-wrapper { flex-direction: column; padding: 20px; } }
+@media (max-width: 1000px) { 
+    .main-wrapper { flex-direction: column; } 
+    .vertical-neon { width: 100%; height: 4px; position: relative; }
+    .info-section, .panel-section { width: 100%; padding: 40px 20px; }
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -51,60 +90,65 @@ input[type="text"], input[type="file"] { width: 100%; padding: 14px; border: 1px
 <body>
 <div class="wave-container"><div class="wave"></div></div>
 <div id="loadingOverlay">
-    <div style="color: #fff; font-weight: bold; font-size: 20px; margin-bottom: 10px; letter-spacing: 2px;">ZZ XTREAM</div>
-    <div id="statusText" style="color: var(--primary); font-size: 14px; font-weight: bold;">BAĞLANILIYOR...</div>
+    <div style="color: #fff; font-weight: bold; font-size: 28px; margin-bottom: 10px; letter-spacing: 3px;">ZZ XTREAM</div>
+    <div id="statusText" style="color: var(--primary); font-size: 18px; font-weight: bold;">SİSTEM YÜKLENİYOR...</div>
 </div>
 
 <div class="main-wrapper">
-    <!-- SOL TARAF: TANITIM VE NOTLAR -->
+    <!-- SOL TARAF -->
     <div class="info-section">
         <h2>ZZ XTREAM PLAYER</h2>
-        <p>Yeni nesil medya deneyimine hoş geldiniz. ZZ XTREAM, hız ve güvenliği premium bir tasarımda birleştirir.</p>
+        <p>Geleceğin medya oynatıcısı ile tanışın. Modern mimari, ultra hız ve sarsılmaz güvenlik tek bir çatı altında toplandı.</p>
         
-        <h3>🚀 SON GÜNCELLEME NOTLARI (v1.0.0.1)</h3>
+        <h3>💎 NEDEN ZZ XTREAM?</h3>
         <ul class="feature-list">
-            <li><strong>3D Küp Mimarisi:</strong> Tüm buton ve kartlar derinlik hissi veren 3D motoruyla yeniden tasarlandı.</li>
-            <li><strong>Veri İzolasyonu:</strong> Çoklu kullanıcı desteği ile her profilin listesi ve favorileri kendine özel (Zero-Trust) hale getirildi.</li>
-            <li><strong>Akıcı Oynatıcı:</strong> 4K ve HD içerikler için donanım hızlandırmalı video motoru optimize edildi.</li>
-            <li><strong>Hassas Favoriler:</strong> İçeriklerin üstüne 3 saniye basılı tutarak akıllı favori listesi oluşturma özelliği eklendi.</li>
-            <li><strong>Google Play Billing:</strong> Güvenli ödeme ve 1 yıllık abonelik sistemi resmi Google altyapısına bağlandı.</li>
+            <li><strong>3D Küp Arayüz:</strong> Sıradan listelerden kurtulun. Uygulamanın her köşesinde derinlik hissini ve premium kaliteyi yaşayın.</li>
+            <li><strong>Maksimum Akıcılık:</strong> 1000 Mbit internete bile taş çıkartan donanım hızlandırmalı video motoru ile 4K içeriklerde sıfır donma.</li>
+            <li><strong>Kişisel Güvenlik:</strong> Dünyada ilk defa uygulanan "Zero-Trust" veri izolasyonu sayesinde listeniz sadece size ve profilinize özeldir.</li>
+            <li><strong>Hassas Kontroller:</strong> Sadece 3 saniye basılı tutarak favorilerinizi yönetin, akıllı arama ile saniyeler içinde içeriğinize ulaşın.</li>
         </ul>
 
-        <h3>📖 KULLANMA KILAVUZU</h3>
+        <h3>🛠️ NASIL KULLANILIR?</h3>
         <ul class="feature-list">
-            <li><strong>Cihaz Tanımlama:</strong> Uygulama açılışında size özel bir MAC adresi atanır. Tüm işlemleriniz bu kimlik üzerinden yürür.</li>
-            <li><strong>Kanal Yükleme:</strong> Sağdaki paneli kullanarak M3U linkinizi gönderin veya dosyanızı yükleyin. Değişiklikler uygulamada anında belirir.</li>
-            <li><strong>Profil Yönetimi:</strong> Uygulama içinden birden fazla profil oluşturabilir, her aile üyesine özel şifreli alanlar yaratabilirsiniz.</li>
-            <li><strong>Aktivasyon:</strong> Deneme süresi bitiminde "Lisans Al" butonuyla resmi Google Play ödemesini tamamlayarak 1 yıl tam erişim sağlayın.</li>
+            <li><strong>Adım 1:</strong> Uygulamayı açın ve size özel oluşturulan Cihaz Kimliğini (MAC) not edin.</li>
+            <li><strong>Adım 2:</strong> Sağdaki paneli kullanarak MAC adresinizi girin ve M3U linkinizi veya dosyanızı sisteme gönderin.</li>
+            <li><strong>Adım 3:</strong> Değişiklikler uygulamanıza anında yansıyacaktır. Keyfini çıkarın!</li>
         </ul>
     </div>
 
-    <!-- SAĞ TARAF: YÜKLEME PANELİ -->
-    <div class="panel-section">
-        <div style="font-weight: 900; font-size: 20px; letter-spacing: 2px;">YÖNETİM PANELİ</div>
-        <div class="neon-line"></div>
+    <!-- DİKEY NEON BÖLÜCÜ -->
+    <div class="vertical-neon"></div>
 
-        <div class="card" style="border-top: 3px solid #43a047;">
-            <h3 style="margin-top:0; font-size:14px; color:#66bb6a; font-weight: 800;">UYGULAMAYI İNDİR</h3>
-            <a href="BURAYA_GOOGLE_PLAY_LINKI" target="_blank" class="cube-btn btn-green">
-                <span class="btn-side"></span><span class="btn-top">GOOGLE PLAY'DEN YÜKLE</span>
+    <!-- SAĞ TARAF -->
+    <div class="panel-section">
+        <div style="font-weight: 900; font-size: 28px; letter-spacing: 3px;">KONTROL MERKEZİ</div>
+        <div style="width: 100px; height: 4px; background: var(--primary); margin: 20px 0 40px; border-radius: 10px; box-shadow: 0 0 15px var(--primary);"></div>
+
+        <div class="card" style="border-top: 4px solid #43a047;">
+            <h3 style="margin-top:0; color:#66bb6a; font-weight: 800;">UYGULAMA İNDİRME</h3>
+            <p style="font-size: 15px; color: #ccc; margin-bottom: 20px;">En güncel sürümü edinmek için aşağıdaki butona tıklayın.</p>
+            <a href="#" target="_blank" class="cube-btn btn-green">
+                <span class="btn-side"></span><span class="btn-top">GOOGLE PLAY STORE</span>
             </a>
         </div>
 
         <div class="card">
-            <div id="accountBadge" style="background:rgba(33,150,243,0.1); padding:10px; border-radius:12px; font-size:12px; margin-bottom:15px; display:none; color:#90caf9;"></div>
-            <h3 style="margin-top:0; font-size:13px; color:var(--primary); font-weight: 800;">KANAL LİSTESİ YÜKLE (M3U)</h3>
-            <input type="text" id="m3uMac" placeholder="MAC ADRESİ" style="margin-bottom: 15px;">
-            <input type="text" id="m3uUrl" placeholder="M3U PLUS URL" style="margin-bottom: 10px;">
-            <button class="cube-btn btn-blue" onclick="uploadPlaylistUrl()"><span class="btn-side"></span><span class="btn-top">LİNKİ GÖNDER</span></button>
-            <div style="text-align:center; margin: 20px 0; font-size: 11px; color: rgba(255,255,255,0.1); font-weight: 900;">VEYA DOSYA SEÇİN</div>
-            <input type="file" id="m3uFileInput" accept=".m3u, .m3u8" style="margin-bottom: 10px;">
-            <button class="cube-btn btn-purple" onclick="uploadPlaylistFile()"><span class="btn-side"></span><span class="btn-top">DOSYAYI YÜKLE</span></button>
+            <div id="accountBadge" style="background:rgba(33,150,243,0.15); padding:15px; border-radius:18px; font-size:15px; margin-bottom:20px; display:none; color:#90caf9; font-weight: bold; text-align: center;"></div>
+            <h3 style="margin-top:0; color:var(--primary); font-weight: 800;">KANAL LİSTESİ YÜKLE</h3>
+            <input type="text" id="m3uMac" placeholder="MAC ADRESİNİZ" style="margin-bottom: 20px;">
+            <input type="text" id="m3uUrl" placeholder="M3U PLUS URL (LİNK)" style="margin-bottom: 15px;">
+            <button class="cube-btn btn-blue" onclick="uploadPlaylistUrl()"><span class="btn-side"></span><span class="btn-top">LİNKİ SİSTEME GÖNDER</span></button>
+            
+            <div style="text-align:center; margin: 35px 0; font-size: 15px; color: rgba(255,255,255,0.2); font-weight: 900; letter-spacing: 2px;">VEYA</div>
+            
+            <input type="file" id="m3uFileInput" accept=".m3u, .m3u8" style="margin-bottom: 15px;">
+            <button class="cube-btn btn-purple" onclick="uploadPlaylistFile()"><span class="btn-side"></span><span class="btn-top">DOSYAYI SİSTEME YÜKLE</span></button>
         </div>
     </div>
 </div>
 
 <script>
+// FIREBASE AYARLARI
 const part1 = "AIzaSyAZq37V4Ntd"; const part2 = "HdjiN5GUk43omDSxz7toW10";
 const firebaseConfig = { apiKey: part1 + part2, databaseURL: "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app", projectId: "zziptv-player-control" };
 firebase.initializeApp(firebaseConfig);
@@ -120,12 +164,13 @@ if (paramMac) document.getElementById('m3uMac').value = paramMac;
 if (paramUid) {
     const badge = document.getElementById('accountBadge');
     badge.style.display = 'block';
-    badge.innerText = "BAĞLI HESAP: " + (paramEmail ? paramEmail : paramUid);
+    badge.innerText = "AKTİF HESAP: " + (paramEmail ? paramEmail : paramUid);
 }
 
 auth.signInAnonymously().then(() => {
     document.getElementById('loadingOverlay').style.display = 'none';
 }).catch(e => {
+    console.error("Auth Hatası:", e);
     document.getElementById('statusText').innerText = "BAĞLANTI HATASI!";
     setTimeout(() => { document.getElementById('loadingOverlay').style.display = 'none'; }, 2000);
 });
@@ -140,19 +185,21 @@ function getTargetRef(mac) {
 function uploadPlaylistUrl() {
     const mac = document.getElementById('m3uMac').value;
     const url = document.getElementById('m3uUrl').value;
-    if (!mac || !url) return alert("Lütfen alanları doldurun.");
+    if (!mac || !url) return alert("Lütfen eksik alanları doldurun.");
     getTargetRef(mac).set({ type: 'url', content: url.trim(), updatedAt: Date.now() })
-    .then(() => alert("Başarıyla kaydedildi!")).catch(e => alert("Yetki Hatası: " + e.message));
+    .then(() => alert("Liste başarıyla sisteme gönderildi!"))
+    .catch(e => alert("Yetki Hatası: " + e.message));
 }
 
 function uploadPlaylistFile() {
     const mac = document.getElementById('m3uMac').value;
     const file = document.getElementById('m3uFileInput').files[0];
-    if (!mac || !file) return alert("Lütfen dosya seçin.");
+    if (!mac || !file) return alert("Lütfen MAC adresi ve dosya seçin.");
     const reader = new FileReader();
     reader.onload = (e) => {
         getTargetRef(mac).set({ type: 'text', content: e.target.result.trim(), updatedAt: Date.now() })
-        .then(() => alert("Dosya yüklendi!")).catch(e => alert("Yetki Hatası: " + e.message));
+        .then(() => alert("Dosya başarıyla yüklendi!"))
+        .catch(e => alert("Yetki Hatası: " + e.message));
     };
     reader.readAsText(file);
 }
