@@ -61,7 +61,7 @@ body {
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
-    opacity: 0.4;
+    opacity: 0.5;
 }
 
 .wave {
@@ -69,27 +69,25 @@ body {
     bottom: 0;
     left: 0;
     width: 200%;
-    height: 100px;
-    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0 C150,90 350,-40 500,40 C650,120 900,20 1200,60 L1200,120 L0,120 Z" fill="%234361ee"/></svg>');
+    height: 120px;
     background-repeat: repeat-x;
-    background-size: 50% 100px;
+    background-size: 50% 120px;
 }
 
 .wave.wave1 {
-    animation: waveAnimation 12s linear infinite;
+    animation: waveAnimation 10s linear infinite;
     z-index: 2;
     opacity: 0.7;
-    animation-delay: 0s;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 120' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'%3E%3Cpath d='M0,0 C150,90 350,-40 500,40 C650,120 900,20 1200,60 L1200,120 L0,120 Z' fill='%234361ee'/%3E%3C/svg%3E");
 }
 
 .wave.wave2 {
-    bottom: 10px;
-    animation: waveAnimation 8s linear infinite;
+    bottom: 15px;
+    animation: waveAnimation 6s linear infinite;
     z-index: 1;
     opacity: 0.5;
     animation-delay: -3s;
-    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,30 C200,100 400,0 600,50 C800,100 1000,10 1200,40 L1200,120 L0,120 Z" fill="%237209b7"/></svg>');
-    background-size: 50% 90px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 120' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'%3E%3Cpath d='M0,30 C200,100 400,0 600,50 C800,100 1000,10 1200,40 L1200,120 L0,120 Z' fill='%237209b7'/%3E%3C/svg%3E");
 }
 
 @keyframes waveAnimation {
@@ -97,7 +95,7 @@ body {
     100% { transform: translateX(-50%); }
 }
 
-/* --- YÖNETİM PANELİ (GECE / MOR / MAVİ KONSEPTİ) --- */
+/* --- YÖNETİM PANELİ --- */
 .lang-switcher { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 10; }
 .lang-btn { background: rgba(30, 20, 50, 0.8); color: #fff; border: 1px solid #5a3d80; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s; }
 .lang-btn.active { background: #4cc9f0; color: #190033; border-color: #4cc9f0; box-shadow: 0 0 10px rgba(76, 201, 240, 0.5); }
@@ -123,4 +121,228 @@ input[type="file"] { cursor: pointer; padding: 8px; }
 input:focus { border-color: #4cc9f0; outline: none; box-shadow: 0 0 8px rgba(76, 201, 240, 0.4); }
 
 .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 5px; }
-.btn-orange { background-color: #7209b7; color: #ffffff; box-shadow: 0 4px 15px rgba(114
+.btn-orange { background-color: #7209b7; color: #ffffff; box-shadow: 0 4px 15px rgba(114, 9, 183, 0.4); }
+.btn-orange:hover { background-color: #560bad; box-shadow: 0 6px 20px rgba(114, 9, 183, 0.6); }
+
+.btn-blue { background-color: #4361ee; color: #fff; box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4); }
+.btn-blue:hover { background-color: #3a0ca3; box-shadow: 0 6px 20px rgba(67, 97, 238, 0.6); }
+
+.divider { text-align: center; margin: 15px 0; font-size: 12px; color: #887aab; text-transform: uppercase; font-weight: bold; }
+
+#loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 8, 30, 0.85); display: flex; justify-content: center; align-items: center; z-index: 9999; display: none; }
+</style>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="ocean-waves">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+</div>
+
+<div id="loadingOverlay"><div style="color: #4cc9f0; font-weight: bold;">Güvenli Bağlantı Kuruluyor...</div></div>
+
+<div class="lang-switcher">
+<button class="lang-btn active" id="btnLangTR" onclick="setLanguage('tr')">TR</button>
+<button class="lang-btn" id="btnLangEN" onclick="setLanguage('en')">EN</button>
+</div>
+
+<div class="container">
+<h2 id="mainTitle">ZZ XTREAM Kontrol Paneli</h2>
+<div class="subtitle" id="mainSubtitle">MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.</div>
+
+<div class="card">
+<h3 id="section1Title">1. Kanal Listesi (M3U) Yükle</h3>
+<div id="accountBadge" class="account-badge" style="display:none;"></div>
+<div class="input-group">
+<label class="lblMac">MAC Adresi</label>
+<input type="text" id="m3uMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
+</div>
+<div class="input-group">
+<label id="lblM3uUrl">M3U Plus URL (Yöntem A)</label>
+<input type="text" id="m3uUrl" placeholder="https://domain.com?...">
+</div>
+<button class="btn btn-blue" id="btnSendUrl" onclick="uploadPlaylistUrl()">M3U Linki Gönder</button>
+<div class="divider" id="txtOr">Veya</div>
+<div class="input-group">
+<label id="lblM3uFile">M3U / M3U8 Dosyası Seç (Yöntem B)</label>
+<div class="instructions" id="txtInstructions"></div>
+<input type="file" id="m3uFileInput" accept=".m3u, .m3u8">
+</div>
+<button class="btn btn-orange" id="btnSendFile" onclick="uploadPlaylistFile()">Dosyayı Yükle ve Gönder</button>
+</div>
+
+<div class="card">
+<h3 id="section2Title">2. 1 Yıllık Lisans Aktif Et</h3>
+<p style="font-size: 13px; color: #b8b2cb; margin: 0 0 15px 0;" id="txtPayDesc"></p>
+<div class="input-group">
+<label class="lblMac">MAC Adresi</label>
+<input type="text" id="payMac" placeholder="Örn: AA:BB:CC:DD:EE:FF">
+</div>
+<button class="btn btn-orange" id="btnPay" onclick="redirectToPayment()">Ödeme Yap ve Aktif Et</button>
+</div>
+</div>
+
+<script>
+// --- KONFİGÜRASYON ---
+const firebaseConfig = {
+    apiKey: "AIzaSyAZq37V4NtdHdjiN5GUk43omDSxz7toW10",
+    databaseURL: "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "zziptv-player-control"
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const auth = firebase.auth();
+
+// URL Parametreleri
+const urlParams = new URLSearchParams(window.location.search);
+const paramMac = urlParams.get('mac');
+const paramUid = urlParams.get('uid');
+const paramEmail = urlParams.get('email');
+
+// Güvenli Giriş Başlat
+document.getElementById('loadingOverlay').style.display = 'flex';
+auth.signInAnonymously().then(() => {
+    document.getElementById('loadingOverlay').style.display = 'none';
+    console.log("Güvenli bağlantı başarılı.");
+}).catch((error) => {
+    alert("Güvenlik Hatası: Firebase Authentication devre dışı olabilir. Lütfen geliştiriciye bildirin.");
+});
+
+const langData = {
+    tr: {
+        title: "ZZ XTREAM - Yönetim ve Aktivasyon Merkezi",
+        mainTitle: "ZZ XTREAM Kontrol Paneli",
+        mainSubtitle: "MAC adresiniz ile kanal yükleyin veya aktivasyon yapın.",
+        section1Title: "1. Kanal Listesi (M3U) Yükle",
+        lblMac: "MAC Adresi",
+        lblM3uUrl: "M3U Plus URL (Yöntem A)",
+        btnSendUrl: "M3U Linki Gönder",
+        txtOr: "Veya",
+        lblM3uFile: "M3U / M3U8 Dosyası Seç (Yöntem B)",
+        instructions: "<strong>Nasıl Yapılır?</strong><br>1. Cihazınızdaki <strong>.m3u</strong> veya <strong>.m3u8</strong> dosyanızı seçin.<br>2. \"Dosyayı Yükle ve Gönder\" butonuna basın.",
+        btnSendFile: "Dosyayı Yükle ve Gönder",
+        section2Title: "2. 1 Yıllık Lisans Aktif Et",
+        txtPayDesc: "7 günlük deneme süreniz dolduysa veya 1 yıllık (365 gün) kullanmak istiyorsanız buradan ödeme yapın.",
+        btnPay: "Ödeme Yap ve Aktif Et",
+        alertValid: "Lütfen geçerli bir MAC Adresi ve bir dosya seçin.",
+        alertSuccess: "M3U içeriğiniz başarıyla yüklendi!",
+        alertPayProgress: "Ödeme sistemi iyzico onay sürecindedir. Lütfen daha sonra tekrar deneyin.",
+        accountBadge: "Bağlı hesap: "
+    },
+    en: {
+        title: "ZZ XTREAM - Management & Activation Center",
+        mainTitle: "ZZ XTREAM Control Panel",
+        mainSubtitle: "Upload playlists or activate your device via your MAC address.",
+        section1Title: "1. Upload Channel List (M3U)",
+        lblMac: "MAC Address",
+        lblM3uUrl: "M3U Plus URL (Method A)",
+        btnSendUrl: "Send M3U Link",
+        txtOr: "Or",
+        lblM3uFile: "Select M3U / M3U8 File (Method B)",
+        instructions: "<strong>How to do?</strong><br>1. Select your <strong>.m3u</strong> or <strong>.m3u8</strong> file on your device.<br>2. Press the \"Upload and Send File\" button.",
+        btnSendFile: "Upload and Send File",
+        section2Title: "2. Activate 1-Year License",
+        txtPayDesc: "If your 7-day trial has expired or you want 1-year (365 days) access, make your payment here.",
+        btnPay: "Pay and Activate Now",
+        alertValid: "Please enter a valid MAC Address and select a file.",
+        alertSuccess: "Your M3U content has been uploaded successfully!",
+        alertPayProgress: "Payment system is under iyzico approval. Please try again later.",
+        accountBadge: "Connected account: "
+    }
+};
+
+let currentLang = 'tr';
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById('btnLangTR').classList.toggle('active', lang === 'tr');
+    document.getElementById('btnLangEN').classList.toggle('active', lang === 'en');
+    document.getElementById('siteTitle').innerText = langData[lang].title;
+    document.getElementById('mainTitle').innerText = langData[lang].mainTitle;
+    document.getElementById('mainSubtitle').innerText = langData[lang].mainSubtitle;
+    document.getElementById('section1Title').innerText = langData[lang].section1Title;
+    document.getElementById('lblM3uUrl').innerText = langData[lang].lblM3uUrl;
+    document.getElementById('btnSendUrl').innerText = langData[lang].btnSendUrl;
+    document.getElementById('txtOr').innerText = langData[lang].txtOr;
+    document.getElementById('lblM3uFile').innerText = langData[lang].lblM3uFile;
+    document.getElementById('txtInstructions').innerHTML = langData[lang].instructions;
+    document.getElementById('btnSendFile').innerText = langData[lang].btnSendFile;
+    document.getElementById('section2Title').innerText = langData[lang].section2Title;
+    document.getElementById('txtPayDesc').innerText = langData[lang].txtPayDesc;
+    document.getElementById('btnPay').innerText = langData[lang].btnPay;
+    document.querySelectorAll('.lblMac').forEach(el => el.innerText = langData[lang].lblMac);
+    updateAccountBadge();
+}
+
+function updateAccountBadge() {
+    const badge = document.getElementById('accountBadge');
+    if (paramUid) {
+        badge.style.display = 'block';
+        badge.innerText = langData[currentLang].accountBadge + (paramEmail ? paramEmail : paramUid);
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    if (paramMac) {
+        ['m3uMac', 'payMac'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.value = paramMac; el.readOnly = true; }
+        });
+    }
+    setLanguage('tr');
+});
+
+function sanitizeMac(mac) { return mac.trim().replace(/[:\-\s]/g, "").toLowerCase(); }
+
+function getTargetRef(cleanMac) {
+    if (paramUid) return database.ref('playlists/' + cleanMac + '/' + paramUid);
+    return database.ref('playlists/' + cleanMac);
+}
+
+function uploadPlaylistUrl() {
+    const mac = document.getElementById('m3uMac').value;
+    const url = document.getElementById('m3uUrl').value;
+    if (!mac || !url) return alert(langData[currentLang].alertValid);
+    
+    getTargetRef(sanitizeMac(mac)).set({
+        type: 'url',
+        content: url.trim(),
+        updatedAt: Date.now()
+    }).then(() => {
+        alert(langData[currentLang].alertSuccess);
+        document.getElementById('m3uUrl').value = '';
+    }).catch(e => alert("Yetki Hatası: " + e.message));
+}
+
+function uploadPlaylistFile() {
+    const mac = document.getElementById('m3uMac').value;
+    const file = document.getElementById('m3uFileInput').files[0];
+    if (!mac || !file) return alert(langData[currentLang].alertValid);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        getTargetRef(sanitizeMac(mac)).set({
+            type: 'text',
+            content: e.target.result.trim(),
+            updatedAt: Date.now()
+        }).then(() => {
+            alert(langData[currentLang].alertSuccess);
+            document.getElementById('m3uFileInput').value = '';
+        }).catch(e => alert("Yetki Hatası: " + e.message));
+    };
+    reader.readAsText(file);
+}
+
+function redirectToPayment() {
+    if (!document.getElementById('payMac').value) return alert(langData[currentLang].alertValid);
+    alert(langData[currentLang].alertPayProgress);
+}
+</script>
+</body>
+</html>
