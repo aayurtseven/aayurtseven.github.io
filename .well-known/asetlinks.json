@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.zz_xtream.zz_xtream_player",
+      "sha256_cert_fingerprints":
+        ["82:1A:44:03:74:F2:71:0F:93:95:02:30:2C:C1:30:EC:3B:89:A1:8D:29:2B:85:E8:45:54:4C:BA:86:C7:49:7F"]
+    }
+  }
+]
