@@ -74,10 +74,10 @@ input[type="text"], input[type="file"] { width: 100%; padding: 28px; border: 1px
             <a href="#" target="_blank" class="cube-btn btn-green"><span class="btn-side"></span><span class="btn-top">GOOGLE PLAY STORE</span></a>
         </div>
         <div class="card">
-            <h3>1. PROFİL SEÇİMİ</h3>
-            <div id="profileContainer" class="profile-box"><span class="profile-placeholder">Lütfen aşağıya MAC Adresinizi yazın...</span></div>
-            <h3>2. CİHAZ KİMLİĞİ (MAC)</h3>
+            <h3>1. CİHAZ KİMLİĞİ (MAC)</h3>
             <input type="text" id="m3uMac" placeholder="AA:BB:CC:DD:EE:FF" oninput="fetchProfiles()">
+            <h3 style="margin-top:40px;">2. PROFİL SEÇİMİ</h3>
+            <div id="profileContainer" class="profile-box"><span class="profile-placeholder">Lütfen yukarıya MAC Adresinizi yazın...</span></div>
         </div>
         <div class="card">
             <h3>3. KANAL LİSTESİ YÜKLE</h3>
@@ -112,7 +112,17 @@ firebase.initializeApp({ apiKey: part1 + part2, databaseURL: "https://zziptv-pla
 const database = firebase.database();
 firebase.auth().signInAnonymously().then(() => { document.getElementById('loadingOverlay').style.display = 'none'; });
 
-let selectedUid = null;
+/* ======================================================================
+   v63 - COKLU PROFIL
+   Profiller artik hesabin altinda:  users/<uid>/profileIndex = { pid: "ad" }
+   Site sadece MAC bilir; once cihaz kaydindan hesabin uid'ini bulur:
+       devices/<mac-tireli>/ownerUid  (yoksa .uid)
+   Yukleme hedefi:  playlists/<mac-ayracsiz>/<pid>
+   Varsayilan profilde pid == uid oldugu icin ESKI YOL korunur.
+   ====================================================================== */
+let selectedUid = null;   // secili PROFIL anahtari (pid)
+let ownerUid = null;      // hesabin uid'i
+
 function sanitizeForApp(mac) {
     let clean = mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
     if (clean.length !== 12) return clean;
@@ -120,49 +130,89 @@ function sanitizeForApp(mac) {
 }
 function sanitizeForPlaylist(mac) { return mac.trim().replace(/[:\-\s]/g, "").toLowerCase(); }
 
+function setProfileMessage(msg) {
+    document.getElementById('profileContainer').innerHTML =
+        '<span class="profile-placeholder">' + msg + '</span>';
+}
+
 function fetchProfiles() {
     const rawMac = document.getElementById('m3uMac').value;
     const appKey = sanitizeForApp(rawMac);
-    const container = document.getElementById('profileContainer');
-    if (appKey.length < 17) { container.innerHTML = '<span class="profile-placeholder">MAC Adresi bekleniyor...</span>'; return; }
+    selectedUid = null; ownerUid = null;
 
-    database.ref('devices/' + appKey + '/profiles').once('value', snapshot => {
-        const profiles = snapshot.val();
-        container.innerHTML = ""; selectedUid = null;
-        if (profiles) {
-            Object.keys(profiles).forEach(uid => {
-                const btn = document.createElement('button');
-                btn.className = "cube-btn profile-btn";
-                btn.innerHTML = `<span class="btn-side"></span><span class="btn-top">${profiles[uid]}</span>`;
-                btn.onclick = () => {
-                    document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active'); selectedUid = uid;
-                };
-                container.appendChild(btn);
-            });
-        } else { container.innerHTML = '<span class="profile-placeholder">Bu cihazda kayıtlı profil bulunamadı.</span>'; }
+    if (appKey.length < 17) { setProfileMessage("MAC Adresi bekleniyor..."); return; }
+    setProfileMessage("Profiller aranıyor...");
+
+    database.ref('devices/' + appKey).once('value', devSnap => {
+        const dev = devSnap.val() || {};
+        ownerUid = dev.ownerUid || dev.uid || null;
+
+        if (!ownerUid) {
+            setProfileMessage("Bu cihaza bağlı hesap bulunamadı. Uygulamada giriş yapın.");
+            return;
+        }
+
+        database.ref('users/' + ownerUid + '/profileIndex').once('value', profSnap => {
+            const profiles = profSnap.val();
+            if (profiles && Object.keys(profiles).length > 0) {
+                renderProfileButtons(profiles);
+            } else {
+                database.ref('devices/' + appKey + '/profiles').once('value', legacySnap => {
+                    const legacy = legacySnap.val();
+                    if (legacy && Object.keys(legacy).length > 0) {
+                        renderProfileButtons(legacy);
+                    } else {
+                        setProfileMessage("Profil bulunamadı. Uygulamada PROFİLLER ekranını bir kez açın.");
+                    }
+                });
+            }
+        }, err => {
+            setProfileMessage("Profiller okunamadı: " + err.message);
+        });
+    }, err => {
+        setProfileMessage("Cihaz okunamadı: " + err.message);
     });
 }
+
+function renderProfileButtons(profiles) {
+    const container = document.getElementById('profileContainer');
+    container.innerHTML = "";
+    const keys = Object.keys(profiles);
+
+    keys.forEach(pid => {
+        const btn = document.createElement('button');
+        btn.className = "cube-btn profile-btn";
+        btn.innerHTML = '<span class="btn-side"></span><span class="btn-top">' + profiles[pid] + '</span>';
+        btn.onclick = () => {
+            document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedUid = pid;
+        };
+        container.appendChild(btn);
+
+        if (keys.length === 1) { btn.classList.add('active'); selectedUid = pid; }
+    });
+}
+
 function getTargetRef(mac) {
     const playlistKey = sanitizeForPlaylist(mac);
-    return selectedUid ? database.ref('playlists/' + playlistKey + '/' + selectedUid) : database.ref('playlists/' + playlistKey);
+    return database.ref('playlists/' + playlistKey + '/' + selectedUid);
 }
+
 function uploadPlaylistUrl() {
     const mac = document.getElementById('m3uMac').value;
     const url = document.getElementById('m3uUrl').value;
     if (!mac || !url) return alert("Lütfen alanları doldurun.");
-    getTargetRef(mac).set({ type: 'url', content: url.trim(), updatedAt: Date.now() }).then(() => alert("Liste sisteme gönderildi!"));
+    if (!selectedUid) return alert("Lütfen önce bir PROFİL seçin.");
+    getTargetRef(mac).set({ type: 'url', content: url.trim(), updatedAt: Date.now() })
+        .then(() => alert("Liste gönderildi!"))
+        .catch(e => alert("Gönderilemedi: " + e.message));
 }
+
 function uploadPlaylistFile() {
     const mac = document.getElementById('m3uMac').value;
     const file = document.getElementById('m3uFileInput').files[0];
     if (!mac || !file) return alert("Lütfen MAC adresi ve dosya seçin.");
+    if (!selectedUid) return alert("Lütfen önce bir PROFİL seçin.");
     const reader = new FileReader();
-    reader.onload = (e) => {
-        getTargetRef(mac).set({ type: 'text', content: e.target.result.trim(), updatedAt: Date.now() }).then(() => alert("Dosya yüklendi!"));
-    };
-    reader.readAsText(file);
-}
-</script>
-</body>
-</html>
+    
