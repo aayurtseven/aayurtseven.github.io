@@ -216,3 +216,13 @@ function uploadPlaylistFile() {
     if (!selectedUid) return alert("Lütfen önce bir PROFİL seçin.");
     const reader = new FileReader();
     
+    reader.onload = (e) => {
+        getTargetRef(mac).set({ type: 'text', content: e.target.result.trim(), updatedAt: Date.now() })
+            .then(() => alert("Dosya yüklendi!"))
+            .catch(err => alert("Yüklenemedi: " + err.message));
+    };
+    reader.readAsText(file);
+}
+</script>
+</body>
+</html>
