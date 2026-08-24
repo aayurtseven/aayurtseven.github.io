@@ -99,3 +99,8 @@
 
 #zz-lb{z-index:10050!important}
 .screen-card{cursor:zoom-in}
+
+.oz-grid{grid-template-columns:repeat(2,1fr);gap:18px;margin-top:40px;display:grid}
+@media (max-width:800px){.oz-grid{grid-template-columns:1fr}}
+.oz-feedback{margin-top:28px;border:1px solid var(--line);background:#ffffff05;border-radius:18px;padding:22px 24px;color:var(--muted);font-size:14px;line-height:1.6}
+.oz-feedback a{color:var(--accent-2)}
