@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Veri silme — ZZ XTREAM PLAYER</title>
+  <meta name="description" content="ZZ XTREAM PLAYER veri silme talebi. Favoriler, listeler ve ilerleme silinir.">
+  <style>
+    :root{--bg:#0a0914;--fg:#f2f2f7;--muted:#9a9aad;--line:#ffffff1a;--accent:#7c5cff;--teal:#00e0c6}
+    *{box-sizing:border-box}body{margin:0;color:var(--fg);font:16px/1.65 Inter,system-ui,sans-serif;background:radial-gradient(70% 50% at 12% 18%,#0e4a46 0%,transparent 58%),radial-gradient(55% 50% at 88% 12%,#4a22a0 0%,transparent 54%),#0a0914}
+    a{color:var(--teal)}header,main,footer{max-width:640px;margin:0 auto;padding:22px 20px}
+    header{display:flex;align-items:center;justify-content:space-between}
+    .brand{letter-spacing:.12em;font-weight:800;text-decoration:none;color:var(--fg)}.brand b{color:#e50914}
+    h1{font-size:26px;letter-spacing:-.03em;margin:10px 0 8px}
+    h2{font-size:17px;margin:22px 0 8px}
+    p,li{color:#d7d7e4}ul{padding-left:18px}
+    .card{border:1px solid var(--line);background:#0f0e1acc;border-radius:16px;padding:22px}
+    .muted{color:var(--muted);font-size:13px}
+    label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+    input,textarea{width:100%;border-radius:12px;border:1px solid #ffffff22;background:#ffffff0c;color:#fff;padding:12px 14px;font:14px Inter,system-ui}
+    button{margin-top:16px;border:0;cursor:pointer;border-radius:12px;padding:12px 18px;font-weight:700;color:#0a0914;background:linear-gradient(135deg,#00e0c6,#7c5cff)}
+    .ok{border:1px solid #00e0c655;background:#00e0c618;border-radius:14px;padding:16px}
+    nav a{font-size:13px;color:var(--muted);text-decoration:none}
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="/"><b>ZZ</b> XTREAM PLAYER</a>
+    <nav><a href="/privacy.html">Gizlilik</a> · <a href="/delete-account.html">Hesap sil</a></nav>
+  </header>
+  <main>
+    <p class="muted">Data deletion · Veri silme</p>
+    <h1>Verilerini sil</h1>
+    <div class="card">
+      <div id="ok" class="ok" hidden>
+        <b>Talebin alındı.</b>
+        <p>Buluttaki liste, favori, ilerleme ve cihaz kayıtların en geç 7 iş günü içinde silinir. Hesabı açık bırakmak istersen yeniden boş profille devam edebilirsin.</p>
+      </div>
+      <form id="f" action="https://formsubmit.co/zz.xtream.player@gmail.com" method="POST">
+        <p>Hesabı kapatmadan yalnızca saklanan verilerin silinmesini isteyebilirsin. Giriş yapman gerekmez.</p>
+        <h2>Silinen veriler</h2>
+        <ul>
+          <li>Yüklenen M3U kayıtları</li>
+          <li>Favoriler ve izleme ilerlemesi</li>
+          <li>Profil adları ve cihaz eşlemesi</li>
+        </ul>
+        <p>Hesabı da kapatmak istiyorsan <a href="/delete-account.html">hesap silme</a> sayfasını kullan.</p>
+        <input type="hidden" name="_subject" value="ZZ XTREAM — VERİ SİLME">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://www.zzxtreamplayer.com/delete-data.html?ok=1">
+        <input type="hidden" name="talep" value="veri_silme">
+        <label for="email">Kayıtlı e-posta</label>
+        <input id="email" name="email" type="email" required autocomplete="email" placeholder="ornek@gmail.com">
+        <label for="mac">Cihaz MAC (varsa)</label>
+        <input id="mac" name="mac" type="text" placeholder="AA:BB:CC:DD:EE:FF">
+        <label for="not">Hangi veriler (isteğe bağlı)</label>
+        <textarea id="not" name="mesaj" rows="3" placeholder="Tüm bulut verilerimi silin"></textarea>
+        <button type="submit">Veri silmeyi talep et</button>
+      </form>
+      <p class="muted">Süre: 7 iş günü. <a href="/cdn-cgi/l/email-protection#e09a9ace98949285818dce908c81998592a0878d81898cce838f8d"><span class="__cf_email__" data-cfemail="d8a2a2f6a0acaabdb9b5f6a8b4b9a1bdaa98bfb5b9b1b4f6bbb7b5">[email&#160;protected]</span></a></p>
+    </div>
+  </main>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    if (/[?&]ok=1/.test(location.search)) {
+      document.getElementById('ok').hidden = false;
+      document.getElementById('f').hidden = true;
+    }
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a305027a99a3d606',t:'MTc4NzYwMjMyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
