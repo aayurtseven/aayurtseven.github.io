@@ -63,3 +63,27 @@
 .zz-ct-step span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(135deg,#7c5cff,#00e0c6);color:#0a0914;font-weight:800;font-size:13px}
 .zz-ct-step b{display:block;font-size:14px}
 .zz-ct-step em{display:block;font-style:normal;color:var(--muted);font-size:11px;font-weight:500}
+
+/* yüzen balon + telefon altı — mevcut renk köküne dokunulmadı */
+.zz-stage-lg{min-height:620px}
+.zz-under{position:relative;z-index:6;max-width:420px;margin:-8px auto 0;padding:14px 16px 4px;text-align:center}
+.zz-under strong{display:block;font-size:16px;letter-spacing:-.02em;margin-bottom:8px}
+.zz-under p{margin:0 0 8px;color:#d5d5e2;font-size:13.5px;line-height:1.55}
+.zz-under-gift{color:#d9fff7!important;font-weight:650}
+.zz-under-thx{color:#c4b5fd!important;font-size:13px!important}
+.zz-ct-fab{position:fixed!important;top:14vh;left:3vw;right:auto;bottom:auto;z-index:95;display:inline-flex!important;align-items:center;gap:12px;border:0;cursor:pointer;color:#fff;font:800 18px/1.05 Inter,system-ui,sans-serif;letter-spacing:.01em;padding:18px 26px 18px 20px;border-radius:999px;background:linear-gradient(135deg,#7c5cff 0%,#5b3dff 46%,#00c9b1 160%);box-shadow:0 16px 50px -8px #7c5cffe6,0 0 0 1px #ffffff33 inset;animation:zzCtFly 18s ease-in-out infinite}
+.zz-ct-fab span{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.zz-ct-fab em{font-style:normal;font-weight:650;font-size:12px;color:#d9fff7;letter-spacing:.04em;text-transform:uppercase}
+.zz-ct-fab i{width:14px;height:14px}
+.zz-ct-fab:hover{animation-play-state:paused;transform:scale(1.07);box-shadow:0 22px 60px -8px #7c5cff,0 0 0 1px #ffffff44 inset}
+@keyframes zzCtFly{
+  0%,100%{top:13vh;left:3vw;right:auto;bottom:auto}
+  24%{top:12vh;left:auto;right:3vw;bottom:auto}
+  50%{top:auto;left:auto;right:4vw;bottom:12vh}
+  74%{top:auto;left:3vw;right:auto;bottom:14vh}
+}
+@media (max-width:640px){
+  .zz-ct-fab{padding:16px 18px 16px 16px;font-size:16px}
+  .zz-ct-fab em{font-size:11px}
+  .zz-under{max-width:92%}
+}
