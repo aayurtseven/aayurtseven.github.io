@@ -106,20 +106,28 @@
 .oz-feedback a{color:var(--accent-2)}
 
 
-.feedback-container{max-width:520px;margin:8px auto 0;border:1px solid var(--line);background:#ffffff07;border-radius:18px;padding:30px 28px;box-shadow:0 24px 60px -36px #000c}
-.feedback-container h2{margin:0 0 8px;text-align:center;font-size:26px;letter-spacing:-.03em}
-.fb-lead{text-align:center;color:var(--muted);font-size:14px;margin:0 0 24px}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;margin-bottom:8px;color:#d0d0dc;font-weight:600;font-size:13.5px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;background:#ffffff0d;color:var(--fg);font:14px Inter,system-ui,sans-serif;box-sizing:border-box}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent-2)}
-.form-group textarea{min-height:120px;resize:vertical}
-.rating-group{display:flex;justify-content:space-between;gap:6px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#ffffff08}
-.rating-option{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-size:11.5px;color:var(--muted);flex:1;text-align:center}
-.rating-option.on,.rating-option:hover{color:var(--fg)}
-.rating-option input{accent-color:var(--accent-2);cursor:pointer}
-.submit-btn{width:100%;border:0;cursor:pointer;border-radius:8px;padding:14px 20px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
-.submit-btn:hover{filter:brightness(1.08)}
-.submit-btn:disabled{opacity:.55;cursor:wait}
-.fb-err{color:#ffb4b4;font-size:13px;margin:0 0 10px}
-@media (max-width:560px){.feedback-container{padding:22px 16px}.rating-option span{font-size:10px}}
+
+.feedback-container{max-width:520px;margin:8px auto 0;border:1px solid var(--line);background:#12111c;border-radius:18px;padding:30px 28px;box-shadow:0 24px 60px -36px #000c}
+.feedback-container h2{margin:0 0 8px;text-align:center;font-size:26px;letter-spacing:-.03em;color:var(--fg)}
+.feedback-container .fb-lead{text-align:center;color:var(--muted);font-size:14px;margin:0 0 24px}
+.feedback-container .form-group{margin-bottom:18px}
+.feedback-container .form-group label{display:block;margin-bottom:8px;color:#d0d0dc;font-weight:600;font-size:13.5px}
+.feedback-container .form-group input,
+.feedback-container .form-group select,
+.feedback-container .form-group textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;background:#0a0914;color:#f2f2f7;font:14px Inter,system-ui,sans-serif;box-sizing:border-box;caret-color:#f2f2f7}
+.feedback-container .form-group select option{background:#12111c;color:#f2f2f7}
+.feedback-container .form-group input:focus,
+.feedback-container .form-group select:focus,
+.feedback-container .form-group textarea:focus{outline:none;border-color:var(--accent-2);background:#0e0d18}
+.feedback-container .form-group textarea{min-height:120px;resize:vertical}
+.feedback-container .rating-group{display:flex;justify-content:space-between;gap:6px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0a0914}
+.feedback-container .rating-option{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-size:11.5px;color:var(--muted);flex:1;text-align:center}
+.feedback-container .rating-option.on,
+.feedback-container .rating-option:hover{color:var(--fg)}
+.feedback-container .rating-option input{accent-color:var(--accent-2);cursor:pointer}
+.feedback-container .submit-btn{width:100%;border:0;cursor:pointer;border-radius:8px;padding:14px 20px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+.feedback-container .submit-btn:hover{filter:brightness(1.08)}
+.feedback-container .submit-btn:disabled{opacity:.55;cursor:wait}
+.feedback-container .fb-err{color:#ffb4b4;font-size:13px;margin:0 0 10px}
+.feedback-container .oz-feedback{background:#0a0914;color:#d5d5e2}
+@media (max-width:560px){.feedback-container{padding:22px 16px}.feedback-container .rating-option span{font-size:10px}}
