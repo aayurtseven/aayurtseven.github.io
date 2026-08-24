@@ -24,7 +24,7 @@
 .screen-card{cursor:zoom-in}
 .zz-red{color:#e50914!important;-webkit-text-fill-color:#e50914;background:none!important}.brand .zz-red{letter-spacing:.14em;font-weight:800}h1 .zz-red{letter-spacing:-.03em}
 /* kapalı test FAB + panel — mevcut kurallara dokunulmadı */
-.zz-ct-fab{position:fixed;right:20px;bottom:22px;z-index:90;display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;color:#fff;font:600 14px/1 Inter,system-ui,sans-serif;letter-spacing:.01em;padding:14px 20px 14px 16px;border-radius:999px;background:linear-gradient(135deg,#7c5cff 0%,#5b3dff 42%,#00c9b1 160%);box-shadow:0 10px 36px -8px #7c5cffcc,0 0 0 1px #ffffff22 inset;animation:zzCtFloat 3.4s ease-in-out infinite}
+.zz-ct-fab{position:fixed;right:20px;bottom:22px;z-index:90;display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;color:#fff;font:600 14px/1 Inter,system-ui,sans-serif;letter-spacing:.01em;padding:14px 20px 14px 16px;border-radius:999px;background:linear-gradient(135deg,#7c5cff 0%,#5b3dff 42%,#00c9b1 160%);box-shadow:0 10px 36px -8px #7c5cffcc,0 0 0 1px #ffffff22 inset;animation:none}
 .zz-ct-fab:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 16px 44px -8px #7c5cff,0 0 0 1px #ffffff33 inset}
 .zz-ct-fab:focus-visible{outline:2px solid #00e0c6;outline-offset:3px}
 .zz-ct-fab i{width:10px;height:10px;border-radius:50%;background:#b8ff3e;box-shadow:0 0 0 0 #b8ff3e99;animation:zzCtPing 1.8s ease-out infinite;flex:0 0 auto}
@@ -71,19 +71,28 @@
 .zz-under p{margin:0 0 8px;color:#d5d5e2;font-size:13.5px;line-height:1.55}
 .zz-under-gift{color:#d9fff7!important;font-weight:650}
 .zz-under-thx{color:#c4b5fd!important;font-size:13px!important}
-.zz-ct-fab{position:fixed!important;top:14vh;left:3vw;right:auto;bottom:auto;z-index:95;display:inline-flex!important;align-items:center;gap:12px;border:0;cursor:pointer;color:#fff;font:800 18px/1.05 Inter,system-ui,sans-serif;letter-spacing:.01em;padding:18px 26px 18px 20px;border-radius:999px;background:linear-gradient(135deg,#7c5cff 0%,#5b3dff 46%,#00c9b1 160%);box-shadow:0 16px 50px -8px #7c5cffe6,0 0 0 1px #ffffff33 inset;animation:zzCtFly 18s ease-in-out infinite}
-.zz-ct-fab span{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.zz-ct-fab{position:fixed!important;top:0!important;left:0!important;right:auto!important;bottom:auto!important;z-index:9999!important;pointer-events:auto!important;display:inline-flex!important;align-items:center;gap:12px;border:0;cursor:pointer;color:#fff;font:800 18px/1.05 Inter,system-ui,sans-serif;letter-spacing:.01em;padding:18px 26px 18px 20px;border-radius:999px;background:linear-gradient(135deg,#7c5cff 0%,#5b3dff 46%,#00c9b1 160%);box-shadow:0 16px 50px -8px #7c5cffe6,0 0 0 1px #ffffff33 inset;animation:zzCtFly 18s ease-in-out infinite;will-change:transform}
+.zz-ct-fab span{display:flex;flex-direction:column;align-items:flex-start;gap:3px;pointer-events:none}
 .zz-ct-fab em{font-style:normal;font-weight:650;font-size:12px;color:#d9fff7;letter-spacing:.04em;text-transform:uppercase}
-.zz-ct-fab i{width:14px;height:14px}
-.zz-ct-fab:hover{animation-play-state:paused;transform:scale(1.07);box-shadow:0 22px 60px -8px #7c5cff,0 0 0 1px #ffffff44 inset}
+.zz-ct-fab i{width:14px;height:14px;pointer-events:none}
+.zz-ct-fab:hover{animation-play-state:paused;filter:brightness(1.1);box-shadow:0 22px 60px -8px #7c5cff,0 0 0 1px #ffffff44 inset}
 @keyframes zzCtFly{
-  0%,100%{top:13vh;left:3vw;right:auto;bottom:auto}
-  24%{top:12vh;left:auto;right:3vw;bottom:auto}
-  50%{top:auto;left:auto;right:4vw;bottom:12vh}
-  74%{top:auto;left:3vw;right:auto;bottom:14vh}
+  0%,100%{transform:translate(3vw,13vh)}
+  25%{transform:translate(calc(100vw - 300px),12vh)}
+  50%{transform:translate(calc(100vw - 300px),calc(100vh - 130px))}
+  75%{transform:translate(3vw,calc(100vh - 140px))}
 }
 @media (max-width:640px){
   .zz-ct-fab{padding:16px 18px 16px 16px;font-size:16px}
   .zz-ct-fab em{font-size:11px}
+  @keyframes zzCtFly{
+    0%,100%{transform:translate(3vw,16vh)}
+    25%{transform:translate(calc(100vw - 230px),14vh)}
+    50%{transform:translate(calc(100vw - 230px),calc(100vh - 120px))}
+    75%{transform:translate(3vw,calc(100vh - 130px))}
+  }
   .zz-under{max-width:92%}
 }
+
+.nav-links a.zz-red{cursor:pointer;font-weight:800;text-decoration:none}
+.nav-links a.zz-red:hover{color:#ff2a33!important;-webkit-text-fill-color:#ff2a33}
