@@ -96,3 +96,6 @@
 
 .nav-links a.zz-red{cursor:pointer;font-weight:800;text-decoration:none}
 .nav-links a.zz-red:hover{color:#ff2a33!important;-webkit-text-fill-color:#ff2a33}
+
+#zz-lb{z-index:10050!important}
+.screen-card{cursor:zoom-in}
