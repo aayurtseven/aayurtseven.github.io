@@ -23,3 +23,43 @@
 .screens-wrap.grabbing,.screens-wrap.grabbing *{cursor:grabbing!important}
 .screen-card{cursor:zoom-in}
 .zz-red{color:#e50914!important;-webkit-text-fill-color:#e50914;background:none!important}.brand .zz-red{letter-spacing:.14em;font-weight:800}h1 .zz-red{letter-spacing:-.03em}
+/* kapalı test FAB + panel — mevcut kurallara dokunulmadı */
+.zz-ct-fab{position:fixed;right:20px;bottom:22px;z-index:90;display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;color:#fff;font:600 14px/1 Inter,system-ui,sans-serif;letter-spacing:.01em;padding:14px 20px 14px 16px;border-radius:999px;background:linear-gradient(135deg,#7c5cff 0%,#5b3dff 42%,#00c9b1 160%);box-shadow:0 10px 36px -8px #7c5cffcc,0 0 0 1px #ffffff22 inset;animation:zzCtFloat 3.4s ease-in-out infinite}
+.zz-ct-fab:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 16px 44px -8px #7c5cff,0 0 0 1px #ffffff33 inset}
+.zz-ct-fab:focus-visible{outline:2px solid #00e0c6;outline-offset:3px}
+.zz-ct-fab i{width:10px;height:10px;border-radius:50%;background:#b8ff3e;box-shadow:0 0 0 0 #b8ff3e99;animation:zzCtPing 1.8s ease-out infinite;flex:0 0 auto}
+@keyframes zzCtFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes zzCtPing{0%{box-shadow:0 0 0 0 #b8ff3e88}70%{box-shadow:0 0 0 10px #b8ff3e00}100%{box-shadow:0 0 0 0 #b8ff3e00}}
+.zz-ct-ov{position:fixed;inset:0;z-index:130;background:#05040cd4;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:18px}
+.zz-ct-card{width:min(560px,100%);max-height:min(92vh,760px);overflow:auto;border-radius:22px;border:1px solid #ffffff1f;background:linear-gradient(180deg,#141226f2,#0b0a16f5);box-shadow:0 30px 80px -20px #000c,0 0 0 1px #7c5cff2e inset;padding:26px 26px 22px;color:var(--fg)}
+.zz-ct-card h3{margin:0 0 6px;font-size:22px;letter-spacing:-.03em}
+.zz-ct-card h3 em{font-style:normal;background:linear-gradient(90deg,#7c5cff,#00e0c6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.zz-ct-x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:999px;border:1px solid #ffffff1a;background:#ffffff0a;color:#fff;font-size:22px;line-height:1;cursor:pointer}
+.zz-ct-wrap{position:relative}
+.zz-ct-lead{color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 16px}
+.zz-ct-form{display:flex;gap:8px;margin:0 0 18px}
+.zz-ct-form input{flex:1;min-width:0;border-radius:12px;border:1px solid #ffffff22;background:#ffffff0c;color:#fff;padding:12px 14px;font-size:14px}
+.zz-ct-form input:focus{outline:none;border-color:#7c5cff;box-shadow:0 0 0 3px #7c5cff33}
+.zz-ct-form button{flex:0 0 auto;border:0;cursor:pointer;border-radius:12px;padding:12px 18px;font-weight:650;color:#0a0914;background:linear-gradient(135deg,#00e0c6,#7c5cff);font-size:14px}
+.zz-ct-form button:disabled{opacity:.55;cursor:wait}
+.zz-ct-note{font-size:12px;color:#ffb4b4;margin:-10px 0 14px}
+.zz-ct-body{font-size:13.5px;line-height:1.65;color:#d5d5e2}
+.zz-ct-body p{margin:0 0 10px}
+.zz-ct-body ul{margin:8px 0 12px;padding-left:18px}
+.zz-ct-body li{margin:0 0 6px}
+.zz-ct-gift{border:1px solid #00e0c633;background:#00e0c614;border-radius:14px;padding:12px 14px;margin:12px 0;color:#d9fff7}
+.zz-ct-mail{margin-top:14px;font-size:12.5px;color:var(--muted)}
+.zz-ct-mail a{color:#00e0c6;text-decoration:underline}
+.zz-ct-ok{text-align:center;padding:12px 4px 6px}
+.zz-ct-ok b{display:block;font-size:20px;margin:8px 0 10px}
+@media (max-width:640px){
+  .zz-ct-fab{right:14px;bottom:14px;padding:12px 16px 12px 14px;font-size:13px}
+  .zz-ct-form{flex-direction:column}
+}
+
+.zz-ct-steps{display:flex;flex-direction:column;gap:10px;margin:14px 0 16px;text-align:left}
+.zz-ct-step{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid #ffffff22;background:#ffffff0c;color:#fff;text-decoration:none}
+.zz-ct-step:hover{background:#7c5cff2e;border-color:#7c5cff66}
+.zz-ct-step span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(135deg,#7c5cff,#00e0c6);color:#0a0914;font-weight:800;font-size:13px}
+.zz-ct-step b{display:block;font-size:14px}
+.zz-ct-step em{display:block;font-style:normal;color:var(--muted);font-size:11px;font-weight:500}
