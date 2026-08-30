@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZZ XTREAM — Kanal Listesi Yükle</title>
+<style>
+:root {
+  --bg: #0b0c10;
+  --card: #15161c;
+  --line: rgba(255,255,255,.14);
+  --text: #f4f4f5;
+  --muted: #9aa3b2;
+  --red: #e50914;
+  --ok: #43a047;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh;
+  font-family: Segoe UI, Roboto, sans-serif;
+  background: radial-gradient(1200px 600px at 20% -10%, #2a0b14 0%, var(--bg) 55%);
+  color: var(--text);
+}
+.wrap { max-width: 640px; margin: 0 auto; padding: 28px 18px 48px; }
+h1 { font-size: 28px; margin: 0 0 6px; letter-spacing: .04em; }
+.sub { color: var(--muted); margin: 0 0 22px; font-size: 14px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+label { display: block; font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+input[type=text], input[type=file] {
+  width: 100%; padding: 14px 16px; border-radius: 12px;
+  border: 1px solid var(--line); background: #0b0c10; color: var(--text);
+  font-size: 16px;
+}
+.row { display: flex; flex-wrap: wrap; gap: 8px; min-height: 48px; }
+.pill {
+  border: 1px solid var(--line); background: transparent; color: var(--text);
+  border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer;
+}
+.pill.active { background: var(--red); border-color: #fff; }
+.msg { color: var(--muted); font-size: 14px; padding: 10px 0; }
+.ok { color: #81c784; }
+.err { color: #ef9a9a; }
+button.main {
+  width: 100%; margin-top: 12px; height: 50px; border: 0; border-radius: 12px;
+  background: linear-gradient(180deg, #f6121d, #b00710); color: #fff;
+  font-weight: 800; font-size: 15px; letter-spacing: .06em; cursor: pointer;
+}
+button.main:disabled { opacity: .45; cursor: not-allowed; }
+.or { text-align: center; color: #555; font-weight: 800; margin: 16px 0; }
+a { color: #90caf9; }
+</style>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <h1>ZZ XTREAM</h1>
+  <p class="sub">Kanal listesi yükleme. Profiller hesabın altındadır — e-posta hesabı profil değildir.</p>
+
+  <div class="card">
+    <label>1. Cihaz kimliği (MAC)</label>
+    <input type="text" id="mac" placeholder="AA:BB:CC:DD:EE:FF" autocomplete="off">
+  </div>
+
+  <div class="card">
+    <label>2. Profil</label>
+    <div class="row" id="profiles"><span class="msg">MAC yazın…</span></div>
+  </div>
+
+  <div class="card">
+    <label>3. Liste adresi</label>
+    <input type="text" id="url" placeholder="http://...m3u">
+    <button class="main" id="btnUrl" type="button">Sisteme gönder</button>
+    <div class="or">VEYA</div>
+    <label>Dosya (.m3u / .m3u8)</label>
+    <input type="file" id="file" accept=".m3u,.m3u8">
+    <button class="main" id="btnFile" type="button">Dosyayı yükle</button>
+    <p class="msg" id="status"></p>
+  </div>
+
+  <p class="sub"><a href="/">Ana siteye dön</a></p>
+</div>
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyAZq37V4NtdHdjiN5GUk43omDSxz7toW10",
+  databaseURL: "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "zziptv-player-control"
+});
+const db = firebase.database();
+let ownerUid = null;
+let selectedPid = null;
+
+function deviceKey(mac) {
+  const c = mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
+  if (c.length !== 12) return "";
+  return c.match(/.{1,2}/g).join("-");
+}
+function playlistKey(mac) {
+  return mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
+}
+function status(text, cls) {
+  const el = document.getElementById("status");
+  el.className = "msg " + (cls || "");
+  el.textContent = text || "";
+}
+function setProfiles(html) {
+  document.getElementById("profiles").innerHTML = html;
+}
+
+function renderProfiles(map) {
+  const keys = Object.keys(map || {});
+  if (!keys.length) {
+    setProfiles('<span class="msg">Profil yok. Uygulamada Profiller ekranını bir kez açın.</span>');
+    selectedPid = null;
+    return;
+  }
+  document.getElementById("profiles").innerHTML = "";
+  keys.forEach(pid => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "pill";
+    b.textContent = map[pid];
+    b.onclick = () => {
+      document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      selectedPid = pid;
+    };
+    document.getElementById("profiles").appendChild(b);
+  });
+  if (keys.length === 1) {
+    document.querySelector(".pill").classList.add("active");
+    selectedPid = keys[0];
+  }
+}
+
+function loadProfiles() {
+  const key = deviceKey(document.getElementById("mac").value);
+  ownerUid = null;
+  selectedPid = null;
+  if (key.length < 17) {
+    setProfiles('<span class="msg">MAC yazın…</span>');
+    return;
+  }
+  setProfiles('<span class="msg">Profiller aranıyor…</span>');
+  db.ref("devices/" + key).once("value").then(snap => {
+    const dev = snap.val() || {};
+    ownerUid = dev.ownerUid || dev.uid || null;
+    if (!ownerUid) {
+      setProfiles('<span class="msg err">Bu cihaza bağlı hesap yok. Uygulamada giriş yapın.</span>');
+      return;
+    }
+    return db.ref("users/" + ownerUid + "/profileIndex").once("value");
+  }).then(snap => {
+    if (!ownerUid) return;
+    const idx = snap && snap.val();
+    if (idx && Object.keys(idx).length) {
+      renderProfiles(idx);
+    } else {
+      setProfiles('<span class="msg">Profil bulunamadı. Uygulamada Profiller ekranını açın.</span>');
+    }
+  }).catch(e => {
+    setProfiles('<span class="msg err">Okunamadı: ' + e.message + "</span>");
+  });
+}
+
+function targetRef(mac) {
+  return db.ref("playlists/" + playlistKey(mac) + "/" + selectedPid);
+}
+
+function sendUrl() {
+  const mac = document.getElementById("mac").value;
+  const url = document.getElementById("url").value.trim();
+  if (!deviceKey(mac) || !url) return status("MAC ve adres gerekli.", "err");
+  if (!selectedPid) return status("Önce profil seçin.", "err");
+  if (!/^https?:\/\//i.test(url)) return status("Adres http:// veya https:// ile başlamalı.", "err");
+  targetRef(mac).set({ type: "url", content: url, updatedAt: Date.now() })
+    .then(() => status("Liste gönderildi. Uygulamaya dönün.", "ok"))
+    .catch(e => status("Gönderilemedi: " + e.message, "err"));
+}
+
+function sendFile() {
+  const mac = document.getElementById("mac").value;
+  const file = document.getElementById("file").files[0];
+  if (!deviceKey(mac) || !file) return status("MAC ve dosya gerekli.", "err");
+  if (!selectedPid) return status("Önce profil seçin.", "err");
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const text = String(ev.target.result || "").trim();
+    targetRef(mac).set({ type: "text", content: text, updatedAt: Date.now() })
+      .then(() => status("Dosya yüklendi. Uygulamaya dönün.", "ok"))
+      .catch(e => status("Yüklenemedi: " + e.message, "err"));
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById("mac").addEventListener("input", loadProfiles);
+document.getElementById("btnUrl").addEventListener("click", sendUrl);
+document.getElementById("btnFile").addEventListener("click", sendFile);
+
+const q = new URLSearchParams(location.search);
+if (q.get("mac")) {
+  document.getElementById("mac").value = q.get("mac");
+  loadProfiles();
+}
+
+firebase.auth().signInAnonymously().catch(e => status("Bağlantı: " + e.message, "err"));
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a331efe9dd55d617',t:'MTc4ODA3MzQyMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
