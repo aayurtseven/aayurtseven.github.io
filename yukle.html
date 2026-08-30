@@ -97,13 +97,18 @@ const db = firebase.database();
 let ownerUid = null;
 let selectedPid = null;
 
+function hexMac(mac) {
+  const n = String(mac).trim().toLowerCase();
+  const m = n.match(/[0-9a-f]{2}(?:[:.\s-]?[0-9a-f]{2}){5}/);
+  return (m ? m[0] : n).replace(/[^0-9a-f]/g, "");
+}
 function deviceKey(mac) {
-  const c = mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
+  const c = hexMac(mac);
   if (c.length !== 12) return "";
   return c.match(/.{1,2}/g).join("-");
 }
 function playlistKey(mac) {
-  return mac.trim().replace(/[:\-\s]/g, "").toLowerCase();
+  return hexMac(mac);
 }
 function status(text, cls) {
   const el = document.getElementById("status");
@@ -162,6 +167,8 @@ function loadProfiles() {
     const idx = snap && snap.val();
     if (idx && Object.keys(idx).length) {
       renderProfiles(idx);
+    } else if (ownerUid) {
+      renderProfiles({ [ownerUid]: "Ana Profil" });
     } else {
       setProfiles('<span class="msg">Profil bulunamadı. Uygulamada Profiller ekranını açın.</span>');
     }
@@ -212,5 +219,5 @@ if (q.get("mac")) {
 
 firebase.auth().signInAnonymously().catch(e => status("Bağlantı: " + e.message, "err"));
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a331efe9dd55d617',t:'MTc4ODA3MzQyMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
