@@ -194,7 +194,7 @@ function loadProfiles() {
 }
 
 function targetRef(mac) {
-  return db.ref("playlists/" + playlistKey(mac) + "/" + selectedPid);
+  return db.ref("playlists/" + deviceKey(mac) + "/" + selectedPid + "/playlist");
 }
 
 function sendUrl() {
@@ -203,7 +203,7 @@ function sendUrl() {
   if (!deviceKey(mac) || !url) return status("MAC ve adres gerekli.", "err");
   if (!selectedPid) return status("Önce profil seçin.", "err");
   if (!/^https?:\/\//i.test(url)) return status("Adres http:// veya https:// ile başlamalı.", "err");
-  targetRef(mac).set({ type: "url", content: url, updatedAt: Date.now() })
+  targetRef(mac).set({ type: "url", url: url, content: url, updatedAt: Date.now() })
     .then(() => status("Liste gönderildi. Uygulamaya dönün.", "ok"))
     .catch(e => status("Gönderilemedi: " + e.message, "err"));
 }
@@ -216,7 +216,7 @@ function sendFile() {
   const reader = new FileReader();
   reader.onload = ev => {
     const text = String(ev.target.result || "").trim();
-    targetRef(mac).set({ type: "text", content: text, updatedAt: Date.now() })
+    targetRef(mac).set({ type: "text", url: text, content: text, updatedAt: Date.now() })
       .then(() => status("Dosya yüklendi. Uygulamaya dönün.", "ok"))
       .catch(e => status("Yüklenemedi: " + e.message, "err"));
   };
@@ -235,5 +235,5 @@ if (q.get("mac")) {
 
 firebase.auth().signInAnonymously().catch(e => status("Bağlantı: " + e.message, "err"));
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3330b07ad64cdd4',t:'MTc4ODA4NTAxOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3330b07ad64cdd4',t:'MTc4ODA4NTAxOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33ba7be7833fa2d',t:'MTc4ODE3NTMyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
