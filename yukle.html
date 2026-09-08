@@ -151,15 +151,19 @@ function renderProfiles(map) {
 //   devices/<mac>/ownerUid   (v32 ilk-sahip, logout'ta silinmez)
 //   devices/<mac>/uid        (son giriş yapan hesap — eski cihazlar için yedek)
 function readOwnerUid(key) {
-  return db.ref("devices/" + key + "/ownerUid").once("value").then(snap => {
-    const v = snap.val();
-    if (typeof v === "string" && v.trim()) return v.trim();
-    // ownerUid yoksa (v32 öncesi cihaz) son giriş yapan hesaba düş
-    return db.ref("devices/" + key + "/uid").once("value").then(s2 => {
-      const v2 = s2.val();
-      return (typeof v2 === "string" && v2.trim()) ? v2.trim() : null;
+  return db.ref("devices/" + key + "/ownerUid").once("value")
+    .catch(e => { throw new Error("ADIM-A devices/<mac>/ownerUid -> " + e.message); })
+    .then(snap => {
+      const v = snap.val();
+      if (typeof v === "string" && v.trim()) return v.trim();
+      // ownerUid yoksa (v32 öncesi cihaz) son giriş yapan hesaba düş
+      return db.ref("devices/" + key + "/uid").once("value")
+        .catch(e => { throw new Error("ADIM-B devices/<mac>/uid -> " + e.message); })
+        .then(s2 => {
+          const v2 = s2.val();
+          return (typeof v2 === "string" && v2.trim()) ? v2.trim() : null;
+        });
     });
-  });
 }
 
 function loadProfiles() {
@@ -185,7 +189,8 @@ function loadProfiles() {
     // Tek kaynak: profileIndex (uygulama her girişte senkronlar).
     // NOT: users/<uid>/profiles subtree okuması artık owner-only (gizlilik) —
     // site buraya düşemez; index boşsa ana profil sunulur.
-    return db.ref("users/" + ownerUid + "/profileIndex").once("value");
+    return db.ref("users/" + ownerUid + "/profileIndex").once("value")
+      .catch(e => { throw new Error("ADIM-C users/<uid>/profileIndex -> " + e.message); });
   }).then(snap => {
     if (!ownerUid) return;
     const idx = snap ? snap.val() : null;
@@ -238,6 +243,9 @@ function sendFile() {
 document.getElementById("mac").addEventListener("input", loadProfiles);
 document.getElementById("btnUrl").addEventListener("click", sendUrl);
 document.getElementById("btnFile").addEventListener("click", sendFile);
+
+// v96t: teshis izi — surum gorunur olmali
+setProfiles('<span class="msg">v96t yüklü — MAC girin…</span>');
 
 const q = new URLSearchParams(location.search);
 if (q.get("mac")) {
