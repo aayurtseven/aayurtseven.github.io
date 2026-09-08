@@ -206,7 +206,10 @@ function loadProfiles() {
       renderProfiles({ [ownerUid]: "Ana Profil" });
     }
   }).catch(e => {
-    setProfiles('<span class="msg err">Okunamadı: ' + e.message + "</span>");
+    // v96v: kim + hangi adim + giris durumu bir arada — ancak bu satirin TAMAMI
+    // bildirilirse uzaktan teshis mumkun.
+    const durum = authReady ? "auth:OK" : "auth:YOK";
+    setProfiles('<span class="msg err">Okunamadı (' + durum + "): " + e.message + "</span>");
   });
 }
 
@@ -245,7 +248,7 @@ document.getElementById("btnUrl").addEventListener("click", sendUrl);
 document.getElementById("btnFile").addEventListener("click", sendFile);
 
 // v96t: teshis izi — surum gorunur olmali
-setProfiles('<span class="msg">v96t yüklü — MAC girin…</span>');
+setProfiles('<span class="msg">v96v yüklü — MAC girin…</span>');
 
 const q = new URLSearchParams(location.search);
 if (q.get("mac")) {
