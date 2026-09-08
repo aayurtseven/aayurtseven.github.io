@@ -3,269 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZZ XTREAM — Kanal Listesi Yükle</title>
+<meta http-equiv="refresh" content="2; url=https://www.zzxtreamplayer.com/">
+<title>ZZ XTREAM — Yönlendirme</title>
 <style>
-:root {
-  --bg: #0b0c10;
-  --card: #15161c;
-  --line: rgba(255,255,255,.14);
-  --text: #f4f4f5;
-  --muted: #9aa3b2;
-  --red: #e50914;
-  --ok: #43a047;
-}
-* { box-sizing: border-box; }
 body {
-  margin: 0; min-height: 100vh;
-  font-family: Segoe UI, Roboto, sans-serif;
-  background: radial-gradient(1200px 600px at 20% -10%, #2a0b14 0%, var(--bg) 55%);
-  color: var(--text);
+  margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: #0b0c10; color: #f4f4f5;
+  font-family: Segoe UI, Roboto, sans-serif; text-align: center; padding: 20px;
 }
-.wrap { max-width: 640px; margin: 0 auto; padding: 28px 18px 48px; }
-h1 { font-size: 28px; margin: 0 0 6px; letter-spacing: .04em; }
-.sub { color: var(--muted); margin: 0 0 22px; font-size: 14px; }
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 16px;
-}
-label { display: block; font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
-input[type=text], input[type=file] {
-  width: 100%; padding: 14px 16px; border-radius: 12px;
-  border: 1px solid var(--line); background: #0b0c10; color: var(--text);
-  font-size: 16px;
-}
-.row { display: flex; flex-wrap: wrap; gap: 8px; min-height: 48px; }
-.pill {
-  border: 1px solid var(--line); background: transparent; color: var(--text);
-  border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer;
-}
-.pill.active { background: var(--red); border-color: #fff; }
-.msg { color: var(--muted); font-size: 14px; padding: 10px 0; }
-.ok { color: #81c784; }
-.err { color: #ef9a9a; }
-button.main {
-  width: 100%; margin-top: 12px; height: 50px; border: 0; border-radius: 12px;
-  background: linear-gradient(180deg, #f6121d, #b00710); color: #fff;
-  font-weight: 800; font-size: 15px; letter-spacing: .06em; cursor: pointer;
-}
-button.main:disabled { opacity: .45; cursor: not-allowed; }
-.or { text-align: center; color: #555; font-weight: 800; margin: 16px 0; }
 a { color: #90caf9; }
+.small { color: #9aa3b2; font-size: 14px; }
 </style>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script>
+// v96w: bu eski bagimsiz yukleme sayfasi iptal edildi.
+// Kanal listesi yukleme artik ana sayfanin ALTINDAKI panelden yapiliyor.
+if (window.location.pathname.indexOf("yukle") !== -1) {
+  window.location.replace("https://www.zzxtreamplayer.com/");
+}
+</script>
 </head>
 <body>
-<div class="wrap">
-  <h1>ZZ XTREAM</h1>
-  <p class="sub">Kanal listesi yükleme. Profiller hesabın altındadır — e-posta hesabı profil değildir.</p>
-
-  <div class="card">
-    <label>1. Cihaz kimliği (MAC)</label>
-    <input type="text" id="mac" placeholder="AA:BB:CC:DD:EE:FF" autocomplete="off">
-  </div>
-
-  <div class="card">
-    <label>2. Profil</label>
-    <div class="row" id="profiles"><span class="msg">MAC yazın…</span></div>
-  </div>
-
-  <div class="card">
-    <label>3. Liste adresi</label>
-    <input type="text" id="url" placeholder="http://...m3u">
-    <button class="main" id="btnUrl" type="button">Sisteme gönder</button>
-    <div class="or">VEYA</div>
-    <label>Dosya (.m3u / .m3u8)</label>
-    <input type="file" id="file" accept=".m3u,.m3u8">
-    <button class="main" id="btnFile" type="button">Dosyayı yükle</button>
-    <p class="msg" id="status"></p>
-  </div>
-
-  <p class="sub"><a href="/">Ana siteye dön</a></p>
+<div>
+  <h2>Kanal Listesi Yükleme Taşındı</h2>
+  <p class="small">Liste yükleme artık ana sayfanın altındaki kontrol panelinden yapılıyor.<br>
+  Birkaç saniye içinde yönlendiriliyorsun…</p>
+  <p><a href="https://www.zzxtreamplayer.com/">Yönlendirilmezsen buraya dokun</a></p>
 </div>
-<script>
-firebase.initializeApp({
-  apiKey: "AIzaSyAZq37V4NtdHdjiN5GUk43omDSxz7toW10",
-  databaseURL: "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "zziptv-player-control"
-});
-const db = firebase.database();
-let ownerUid = null;
-let selectedPid = null;
-
-function hexMac(mac) {
-  const n = String(mac).trim().toLowerCase();
-  const m = n.match(/[0-9a-f]{2}(?:[:.\s-]?[0-9a-f]{2}){5}/);
-  return (m ? m[0] : n).replace(/[^0-9a-f]/g, "");
-}
-function deviceKey(mac) {
-  const c = hexMac(mac);
-  if (c.length !== 12) return "";
-  return c.match(/.{1,2}/g).join("-");
-}
-function playlistKey(mac) {
-  return hexMac(mac);
-}
-function status(text, cls) {
-  const el = document.getElementById("status");
-  el.className = "msg " + (cls || "");
-  el.textContent = text || "";
-}
-function setProfiles(html) {
-  document.getElementById("profiles").innerHTML = html;
-}
-
-function renderProfiles(map) {
-  const keys = Object.keys(map || {});
-  if (!keys.length) {
-    setProfiles('<span class="msg">Profil yok. Uygulamada Profiller ekranını bir kez açın.</span>');
-    selectedPid = null;
-    return;
-  }
-  document.getElementById("profiles").innerHTML = "";
-  keys.forEach(pid => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "pill";
-    b.textContent = map[pid];
-    b.onclick = () => {
-      document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
-      b.classList.add("active");
-      selectedPid = pid;
-    };
-    document.getElementById("profiles").appendChild(b);
-  });
-  if (keys.length === 1) {
-    document.querySelector(".pill").classList.add("active");
-    selectedPid = keys[0];
-  }
-}
-
-// v96 — KURAL UYUMU:
-// devices/<mac> düğümünün tamamı sahiplik kilitli (anonim okuyamaz).
-// RTDB kuralı artık SADECE şu iki çocuğu herkese okutuyor:
-//   devices/<mac>/ownerUid   (v32 ilk-sahip, logout'ta silinmez)
-//   devices/<mac>/uid        (son giriş yapan hesap — eski cihazlar için yedek)
-function readOwnerUid(key) {
-  return db.ref("devices/" + key + "/ownerUid").once("value")
-    .catch(e => { throw new Error("ADIM-A devices/<mac>/ownerUid -> " + e.message); })
-    .then(snap => {
-      const v = snap.val();
-      if (typeof v === "string" && v.trim()) return v.trim();
-      // ownerUid yoksa (v32 öncesi cihaz) son giriş yapan hesaba düş
-      return db.ref("devices/" + key + "/uid").once("value")
-        .catch(e => { throw new Error("ADIM-B devices/<mac>/uid -> " + e.message); })
-        .then(s2 => {
-          const v2 = s2.val();
-          return (typeof v2 === "string" && v2.trim()) ? v2.trim() : null;
-        });
-    });
-}
-
-function loadProfiles() {
-  const key = deviceKey(document.getElementById("mac").value);
-  ownerUid = null;
-  selectedPid = null;
-  if (key.length < 17) {
-    setProfiles('<span class="msg">MAC yazın…</span>');
-    return;
-  }
-  if (!authReady) {
-    // giris henuz bitmedi; onAuthStateChanged tetikte bu fonksiyonu tekrar cagiracak
-    setProfiles('<span class="msg">Bağlanıyor…</span>');
-    return;
-  }
-  setProfiles('<span class="msg">Profiller aranıyor…</span>');
-  readOwnerUid(key).then(uid => {
-    ownerUid = uid;
-    if (!ownerUid) {
-      setProfiles('<span class="msg err">Bu cihaza bağlı hesap yok. Uygulamada giriş yapın.</span>');
-      return null;
-    }
-    // Tek kaynak: profileIndex (uygulama her girişte senkronlar).
-    // NOT: users/<uid>/profiles subtree okuması artık owner-only (gizlilik) —
-    // site buraya düşemez; index boşsa ana profil sunulur.
-    return db.ref("users/" + ownerUid + "/profileIndex").once("value")
-      .catch(e => { throw new Error("ADIM-C users/<uid>/profileIndex -> " + e.message); });
-  }).then(snap => {
-    if (!ownerUid) return;
-    const idx = snap ? snap.val() : null;
-    if (idx && Object.keys(idx).length) {
-      const map = {};
-      Object.keys(idx).forEach(k => {
-        const v = idx[k];
-        map[k] = typeof v === "string" && v.trim() ? v.trim() : (v && v.name) || (k === ownerUid ? "Ana Profil" : "Profil");
-      });
-      renderProfiles(map);
-    } else {
-      // İndeks henüz yazılmamış (kullanıcı Profiller ekranını hiç açmadı) → ana profil
-      renderProfiles({ [ownerUid]: "Ana Profil" });
-    }
-  }).catch(e => {
-    // v96v: kim + hangi adim + giris durumu bir arada — ancak bu satirin TAMAMI
-    // bildirilirse uzaktan teshis mumkun.
-    const durum = authReady ? "auth:OK" : "auth:YOK";
-    setProfiles('<span class="msg err">Okunamadı (' + durum + "): " + e.message + "</span>");
-  });
-}
-
-function targetRef(mac) {
-  return db.ref("playlists/" + deviceKey(mac) + "/" + selectedPid + "/playlist");
-}
-
-function sendUrl() {
-  const mac = document.getElementById("mac").value;
-  const url = document.getElementById("url").value.trim();
-  if (!deviceKey(mac) || !url) return status("MAC ve adres gerekli.", "err");
-  if (!selectedPid) return status("Önce profil seçin.", "err");
-  if (!/^https?:\/\//i.test(url)) return status("Adres http:// veya https:// ile başlamalı.", "err");
-  targetRef(mac).set({ type: "url", url: url, content: url, updatedAt: Date.now() })
-    .then(() => status("Liste gönderildi. Uygulamaya dönün.", "ok"))
-    .catch(e => status("Gönderilemedi: " + e.message, "err"));
-}
-
-function sendFile() {
-  const mac = document.getElementById("mac").value;
-  const file = document.getElementById("file").files[0];
-  if (!deviceKey(mac) || !file) return status("MAC ve dosya gerekli.", "err");
-  if (!selectedPid) return status("Önce profil seçin.", "err");
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const text = String(ev.target.result || "").trim();
-    targetRef(mac).set({ type: "text", url: text, content: text, updatedAt: Date.now() })
-      .then(() => status("Dosya yüklendi. Uygulamaya dönün.", "ok"))
-      .catch(e => status("Yüklenemedi: " + e.message, "err"));
-  };
-  reader.readAsText(file);
-}
-
-document.getElementById("mac").addEventListener("input", loadProfiles);
-document.getElementById("btnUrl").addEventListener("click", sendUrl);
-document.getElementById("btnFile").addEventListener("click", sendFile);
-
-// v96t: teshis izi — surum gorunur olmali
-setProfiles('<span class="msg">v96v yüklü — MAC girin…</span>');
-
-const q = new URLSearchParams(location.search);
-if (q.get("mac")) {
-  document.getElementById("mac").value = q.get("mac");
-  loadProfiles();
-}
-
-// v96s: okuma/giris YARISI duzeltmesi.
-// Tum RTDB okumalari anonim giris TAMAMLANDIKTAN SONRA yapilmali; aksi halde
-// giris gecikirse sorgu "auth != null" kilidine carpar -> "Permission denied".
-let authReady = false;
-firebase.auth().onAuthStateChanged(u => {
-  authReady = !!u;
-  if (authReady && deviceKey(document.getElementById("mac").value).length >= 17) loadProfiles();
-});
-firebase.auth().signInAnonymously().catch(e => status("Bağlantı: " + e.message, "err"));
-</script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a37f0ebadb24c5fd',t:'MTc4ODg4MjA4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
-
