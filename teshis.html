@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZZ — Site Teshis (v96d1)</title>
+<style>
+body { margin:0; min-height:100vh; background:#0b0c10; color:#e8e8ec; font:15px/1.5 Segoe UI, Roboto, sans-serif; }
+.wrap { max-width:680px; margin:0 auto; padding:28px 16px 48px; }
+input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #444; background:#14151c; color:#eee; font-size:16px; }
+button { margin:12px 0; padding:12px 18px; border:0; border-radius:10px; background:#e50914; color:#fff; font-weight:700; cursor:pointer; }
+pre { background:#14151c; border:1px solid #2a2b33; border-radius:10px; padding:12px; white-space:pre-wrap; word-break:break-all; }
+.ok { color:#81c784; } .err { color:#ef9a9a; } .h { color:#9aa3b2; margin-top:16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="margin:0 0 4px">Site Teshis <span class="h">(v96d1)</span></h2>
+  <p class="h">MAC gir → oku → çıktının tamamını bildir.</p>
+  <input id="mac" placeholder="AA:BB:CC:DD:EE:FF">
+  <button id="go">Oku</button>
+  <div id="out"></div>
+</div>
+<script>
+const KEY = "AIzaSyAZq37V4NtdHdjiN5GUk43omDSxz7toW10";
+const RTDB = "https://zziptv-player-control-default-rtdb.europe-west1.firebasedatabase.app";
+const out = document.getElementById("out");
+function log(title, text, cls) {
+  const d = document.createElement("div");
+  d.innerHTML = '<div class="h">' + title + '</div><pre class="' + (cls||"") + '"></pre>';
+  d.querySelector("pre").textContent = text;
+  out.appendChild(d);
+}
+function deviceKey(mac) {
+  const c = String(mac).toLowerCase().replace(/[^0-9a-f]/g, "");
+  if (c.length !== 12) return "";
+  return c.match(/.{1,2}/g).join("-");
+}
+async function ra(path, tok) {
+  const r = await fetch(RTDB + "/" + path + ".json?auth=" + tok);
+  return r.json();
+}
+document.getElementById("go").onclick = async () => {
+  out.innerHTML = "";
+  const k = deviceKey(document.getElementById("mac").value);
+  if (!k) { log("MAC", "gecersiz MAC (12 hex bayt bekleniyor)", "err"); return; }
+  log("1) cihaz anahtari", k);
+  let tok;
+  try {
+    const r = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + KEY, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: '{"returnSecureToken":true}'
+    });
+    const j = await r.json();
+    tok = j.idToken;
+    if (!tok) throw new Error(JSON.stringify(j));
+    log("2) anonim giris", "OK (token alindi)", "ok");
+  } catch (e) { log("2) anonim giris", "HATA: " + e.message, "err"); return; }
+  const uid = await ra("devices/" + k + "/uid", tok);
+  log("3) devices/<mac>/uid  [son giris]", JSON.stringify(uid));
+  const owner = await ra("devices/" + k + "/ownerUid", tok);
+  log("4) devices/<mac>/ownerUid  [ilk sahip]", JSON.stringify(owner));
+  const targets = [];
+  if (typeof uid === "string") targets.push(["uid", uid]);
+  if (typeof owner === "string" && owner !== uid) targets.push(["ownerUid", owner]);
+  let n = 5;
+  for (const [tag, acc] of targets) {
+    const idx = await ra("users/" + acc + "/profileIndex", tok);
+    log(n + ") users/<" + tag + ">/profileIndex", JSON.stringify(idx, null, 2));
+    n++;
+  }
+  log("SONUC", "Bu ciktinin TAMAMINI (butun basliklariyla) bildir.", "ok");
+};
+</script>
+</body>
+</html>
