@@ -1,0 +1,9 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="zzdemo1" group-title="ZZ Demo",ZZ Demo 1 - Big Buck Bunny (HLS)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1 tvg-id="zzdemo2" group-title="ZZ Demo",ZZ Demo 2 - Sintel (HLS)
+https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8
+#EXTINF:-1 tvg-id="zzdemo3" group-title="ZZ Demo",ZZ Demo 3 - Tears of Steel (HLS)
+https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8
+#EXTINF:-1 tvg-id="zzdemo4" group-title="ZZ Demo",ZZ Demo 4 - Akamai Live Test (HLS)
+https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8
